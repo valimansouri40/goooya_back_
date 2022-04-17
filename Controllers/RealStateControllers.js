@@ -9,7 +9,6 @@ const fs= require('fs');
 const Mark = require('../ModelsControllers/MarkModels');
 const Appointment = require('../ModelsControllers/AppointmentModels');
 const Rate = require('../ModelsControllers/RateModels');
-const catchAsync = require('../../../react and node js/node js/Udemy - Node.js, Express, MongoDB & More The Complete Bootcamp 2020 2020-11/16.project/complete-node-bootcamp-master/4-natours/after-section-14/utils/catchAsync');
 
 const multerStorage = multer.memoryStorage();
 
@@ -39,17 +38,8 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
         next();
 })
 
-exports.CreateRealStateNumber=catchAsync(async(req, res , next)=>{
-//     const fn= await RealState.find({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
-//    if(fn.length > 0){
-//     req.body.RealStateNumber = fn[0].RealStateNumber * 1  + 3;
-    
-//    }else{
-//     req.body.RealStateNumber = req.body.cityandareaid + '1000';
-//     req.body.RealStateNumber = req.body.RealStateNumber * 1;
-       
-//    }
-//    console.log(req.body.RealStateNumber, fn);
+exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
+
 const fn= await RealState.findOne({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
 console.log(fn ,req.body.RealStateNumber);
 if(fn){
@@ -61,6 +51,7 @@ if(fn){
     
 }
 console.log(fn ,req.body.RealStateNumber);
+//  await RealState.deleteMany();
    next();
 });
 

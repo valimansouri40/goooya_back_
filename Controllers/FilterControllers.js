@@ -33,10 +33,12 @@ const YearBuild=[
     {value:'&YearBuild[gte]=20', text:'بیش تر از 20 سال' }
 ]
 exports.GetFilter= CatchAsync(async(req, res)=>{
-                console.log('ali mehrdad')
-            //await Filter.create({YearBuild:YearBuild, Price:price, Measure:Measure})
+                
+                const exist= await Filter.findOne();
+                if(!exist){
+            await Filter.create({YearBuild:YearBuild, Price:price, Measure:Measure})
+        }
             const filter= await Filter.findOne();
-
             res.status(200).json({
                 status:'succes',
                 data: filter
@@ -64,13 +66,15 @@ const Lease= [{value:'', text:'همه'},
 
 
 exports.GetFilterrh= CatchAsync(async(req, res)=>{
-    console.log('ali mehrdad')
-//await Filterrh.create({YearBuild:YearBuild, Price:price1, Measure:Measure, Lease:Lease})
-const filter= await Filterrh.findOne();
-console.log(filter)
-res.status(200).json({
-    status:'succes',
-    data: filter
-})
+    
+    const exist= await Filterrh.findOne();
+    if(!exist){
+        await Filterrh.create({YearBuild:YearBuild, Price:price1, Measure:Measure, Lease:Lease})}
+        const filter= await Filterrh.findOne();
+        
+        res.status(200).json({
+            status:'succes',
+            data: filter
+        })
 
 })

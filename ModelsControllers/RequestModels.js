@@ -52,8 +52,15 @@ const RequestSchema=mongoose.Schema({
         default: Date.now()
     }
 
-})
+});
 
+RequestSchema.pre(/find/, async function(next){
+    this.populate({
+        path:'Objid',
+        select: 'FristName  LastName  PhoneNumber _id role '
+    });
+    next();
+})
 
 const Request= mongoose.model('request',  RequestSchema);
 

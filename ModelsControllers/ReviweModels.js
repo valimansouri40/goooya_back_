@@ -8,7 +8,7 @@ const ReviweSchema= mongoose.Schema({
         type:String,
        },
      RealStateId:{
-        required:[true,''],
+        
         type:mongoose.Schema.ObjectId,
         ref:'RealState'
     },

@@ -20,7 +20,7 @@ const WorkSampelSchema=mongoose.Schema({
         
         
     },
-    creatAt:{
+    createAt:{
         type: Date,
         default: Date.now()
     }

@@ -3,20 +3,20 @@ class ApiFeacher{
     constructor(data, query){
         this.data = data
         this.query= query
-
+        
     }
 
     filter(){
         const queryobj= {...this.query};
 
-        const araryel= ['page', 'limit', 'sort'];
+        const araryel= ['page', 'limit','?' , 'sort', '_id'];
         araryel.forEach(el=> delete queryobj[el] );
 
         let queryStr = JSON.stringify(queryobj);
       queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-  
+    
       this.data = this.data.find(JSON.parse(queryStr));
-  
+    
       return this;
     }
 
@@ -31,17 +31,24 @@ class ApiFeacher{
 
     
     sort(){
-        if(this.query.sort){
-            const sortby= this.query.sort;
-            this.data= this.data.find().sort(sortby).split(',').join(' ')
-        }
-        // else{
-        //     this.data= this.data.find().sort('creatAt')
-        // }
+       
+            this.data= this.data.find().sort('-createAt')
         return this;
     }
 
+    filterandlength(){
+        const queryobj= {...this.query};
 
+        const araryel= ['page', 'limit', 'sort', '_id'];
+        araryel.forEach(el=> delete queryobj[el] );
+
+        let queryStr = JSON.stringify(queryobj);
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    
+      this.data = this.data.find(JSON.parse(queryStr));
+    
+      return this;
+    }
 
 }
 

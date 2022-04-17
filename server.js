@@ -8,7 +8,7 @@ mongoose.connect(process.env.LOCAL_DATABASE,{
     // useFindAndModify:false,
     useNewUrlParser:true,
     useUnifiedTopology:true
-}).then(()=>console.log('connect mongoose')).catch((e)=>console.log(e));
+}).then(()=>console.log('connect mongoose')).catch((e)=>console.log(e, 'cant connect ...!'));
 
 const port= process.env.PORT|| 8000;
 app.listen(port,()=>{

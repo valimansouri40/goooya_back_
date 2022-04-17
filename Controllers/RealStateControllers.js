@@ -1,12 +1,15 @@
 const RealState= require('../ModelsControllers/RealStateModels');
 const { CatchAsync } = require('../Utils/CatchAsync');
-const {PostData, GetAllData, GetOneData, UpdateData, DeleteOneData } = require("./FactoryControllers");
+const { GetAllData, GetOneData, UpdateData } = require("./FactoryControllers");
 const City = require('../ModelsControllers/CityModels');
 const Area = require('../ModelsControllers/AreaModels');
 const sharp= require('sharp');
 const multer= require('multer');
 const fs= require('fs');
-
+const Mark = require('../ModelsControllers/MarkModels');
+const Appointment = require('../ModelsControllers/AppointmentModels');
+const Rate = require('../ModelsControllers/RateModels');
+const catchAsync = require('../../../react and node js/node js/Udemy - Node.js, Express, MongoDB & More The Complete Bootcamp 2020 2020-11/16.project/complete-node-bootcamp-master/4-natours/after-section-14/utils/catchAsync');
 
 const multerStorage = multer.memoryStorage();
 
@@ -31,17 +34,38 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
 
         const realstate= await RealState.findById(paramm);
             
-        // realstate.Image.map(mp=>{
-        //     console.log(mp)
-        //      // fs.unlinkSync(`public/img/${mp}`)
-        // })
         realstate.Image.forEach(path => fs.existsSync(`public/img/${path}`) 
         && fs.unlinkSync(`public/img/${path}`))
         next();
 })
 
+exports.CreateRealStateNumber=catchAsync(async(req, res , next)=>{
+//     const fn= await RealState.find({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
+//    if(fn.length > 0){
+//     req.body.RealStateNumber = fn[0].RealStateNumber * 1  + 3;
+    
+//    }else{
+//     req.body.RealStateNumber = req.body.cityandareaid + '1000';
+//     req.body.RealStateNumber = req.body.RealStateNumber * 1;
+       
+//    }
+//    console.log(req.body.RealStateNumber, fn);
+const fn= await RealState.findOne({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
+console.log(fn ,req.body.RealStateNumber);
+if(fn){
+ req.body.RealStateNumber = fn.RealStateNumber * 1  + 2;
+ 
+}else{
+ req.body.RealStateNumber = req.body.cityandareaid + '1000';
+ req.body.RealStateNumber = req.body.RealStateNumber * 1;
+    
+}
+console.log(fn ,req.body.RealStateNumber);
+   next();
+});
+
 exports.ImageHandller=CatchAsync(async (req,res,next)=>{
-    console.log('req.body')
+    
     if(req.body.Image ){
         
         const images= req.body.Image;
@@ -51,8 +75,8 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
       
   await Promise.all(
     images.map(async (file, i) => {
-      const filename = `realstate-${Date.now()}-${i + 1}.jpeg`;
-        console.log(filename)
+      const filename = `realstate-${req.body.RealStateNumber}-${i + 1}.jpeg`;
+        
         const fl= file.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
            
@@ -61,6 +85,8 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
       .toFile(`public/img/${filename}`)
       .then(data => {
           console.log('normal: ')
+
+          
       })
       .catch(err => console.log(`downisze issue ${err}`))
 
@@ -72,18 +98,29 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
 })
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
-
-   const model= await RealState.create(req.body);
+   
+    await RealState.create(req.body);
       
-        res.json({
+        res.status(200).json({
             status:'succes',
         })
-        next()
+       
 });
 exports.GetAllRealState= GetAllData(RealState);
 exports.GetOneState= GetOneData(RealState);
 exports.UpdateRealState= UpdateData(RealState);
-exports.DeleteOneRealState= DeleteOneData(RealState);
+exports.DeleteOneRealState= CatchAsync(async (req, res)=>{
+    const param= req.params.id;
+    await Mark.deleteMany({RealStateId: param});
+    await Appointment.deleteMany({RealStateId: param})
+    await Rate.deleteMany({RealStateId: param})
+    await RealState.findByIdAndDelete(param);
+    
+    res.status(200).json({
+        status:'success',
+        
+    })
+});
 
 
 
@@ -110,7 +147,6 @@ exports.WriteArea=CatchAsync( async(req, res, next)=>{
     const findcity= await City.findOne({id:cityId});
 
     req.body.objid= findcity._id;
-    console.log(req.body.objid)
 
     const filter= await Area.find({...req.body});
     if(filter.length  < 1){
@@ -133,7 +169,7 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
 
 exports.GetAllArea=CatchAsync( async( req, res)=>{
         const id= req.query.id;
-        console.log(id)
+        
     const city= await Area.find({objid: id});
     res.status(200).json({
         status: 'succes',
@@ -143,7 +179,7 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
 
 exports.FindCity=CatchAsync(async(req, res)=>{
     const id= req.query.city;
-    console.log(id)
+    
     const city= await City.find({name:id});
     res.status(200).json({
         status: 'succes',
@@ -163,9 +199,9 @@ exports.FilterCity=CatchAsync(async(req, res)=>{
 
 exports.FindArea=CatchAsync(async(req, res)=>{
     const id= req.query.area;
-    console.log(req.query)
+    
     const city= await Area.find({areaName: id});
-    console.log(city)
+    
 
     res.status(200).json({
         status: 'succes',
@@ -175,7 +211,7 @@ exports.FindArea=CatchAsync(async(req, res)=>{
 
 exports.FilterArea=CatchAsync(async(req, res)=>{
     const id= req.query.id;
-    console.log(id)
+    
     await Area.findByIdAndDelete(id);
     res.status(200).json({
         status: 'succes',

@@ -33,17 +33,23 @@ const UserSchema= mongoose.Schema({
         Image:{
             type: String
         },
-        CreateAt:{
+        createAt:{
             type:Date,
-            default:Date.now()
+            default: Date.now()
         },
         role:{
             type:String,
             default:'admin',
-            enum:['admin','user', 'advisor', 'employee']
+            enum:['admin','user', 'advisor', 'employee', 'dealer']
         },
         CitysAndAreas:{
             type: Array
+        },
+        City:{
+            type: Array
+        },
+        AdvisorAddress:{
+            type: String
         },
         SineupCode:Number,
         ResetePassword:String,
@@ -52,6 +58,8 @@ const UserSchema= mongoose.Schema({
         
 
 })
+
+
 
 UserSchema.pre('save', async function(next){
 
@@ -64,12 +72,11 @@ UserSchema.pre('save', async function(next){
 });
 
 
-
 UserSchema.methods.compirePassword=async function(pas1,pas2){
         return await bycript.compare(pas1,pas2);
 }
 
-UserSchema.methods.ResetPasswordcode= async function(){
+UserSchema.methods.ResetPasswordcode=  function(){
         const randombyte= crypto.randomBytes(6).toString('hex');
         this.ResetPassword = crypto.createHash('sha256').update(randombyte).digest('hex');
         this.ResetePasswordExpires = Date.now() + 3 * 60 * 1000;

@@ -63,7 +63,7 @@ HeaterSystem: {
     type:String,
 },
 Image: {
-    required:[true,'error str'],
+    required:[true,'error img'],
     type:Array
 
 },
@@ -96,10 +96,7 @@ Location:{
     type: Object
 },
 Masahat: {
-    required:[true,'error str'],
-    type:String,
-    min:[3,'error length str']
-
+    type:String
 },
 Measure: {
     required:[true,'error str'],
@@ -108,9 +105,7 @@ Measure: {
 
 },
 Mortgage: {
-    required:[true,'error str'],
-    type:String,
-    min:[3,'error length str']
+    type:String
 
 },
 OfStorage: {
@@ -130,29 +125,21 @@ Pool: {
         type:Boolean
 },
 PropertyDirection: {
-    required:[true,'error str'],
-    type:String,
-    min:[3,'error length str']
-
+    type:String
 },
 PropertySituation: {
-    required:[true,'error str'],
-    type:String,
-    min:[3,'error length str']
-
+    type:String
 },
 Security: {
         default:false,
         type:Boolean
 },
 Service: {
-    required:[true,'error str'],
     type:String,
     min:[3,'error length str']
 
 },
 SomeRoom: {
-    required:[true,'error str'],
     type:String,
     min:[3,'error length str']
 
@@ -194,7 +181,6 @@ TypeState: {
 
 },
 YearBuild: {
-    required:[true,'error num'],
     type:Number
 
 },
@@ -209,13 +195,53 @@ ratingsQuantity:{
     type: Number,
     default: 0
 },
+RegistrarId:{
+    type:mongoose.Schema.ObjectId,
+        ref:'Authhh',
+},
+AdvisorId:{
+    type:mongoose.Schema.ObjectId,
+        ref:'Authhh'
+},
+RealStateNumber:{
+    type: Number,
+    unique:true,
+    required: [true, 'real state not exist']
+},
+EsquierName: {
+    type: String,
+    required: [true, 'real state not exist esquier name']
+},
+EsquierPhoneNumber: {
+            type: Number,
+            required: [true, 'real state not exist esquier ph']
+},
+Mark:{
+    type: Boolean,
+    default: false
+},
 createAt:{
     type:Date,
     default: Date.now()
 }
 });
 
+// RealStateSchema.pre('save', async function(next){
+//      this.RealStateNumber = this
+// })
 
+RealStateSchema.pre('findOne',async function(next){
+        this.populate({
+            path:'AdvisorId',
+            select: 'FristName AdvisorAddress LastName Image PhoneNumber _id role '
+        })
+        this.populate({
+            path:'RegistrarId',
+            select: 'FristName LastName  PhoneNumber _id role '
+        });
+
+        next();
+})
 
  const RealState= mongoose.model('RealState', RealStateSchema);
 

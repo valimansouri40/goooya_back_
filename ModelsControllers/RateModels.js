@@ -19,64 +19,81 @@ const RateSchema= mongoose.Schema({
         UserId:{
             type:mongoose.Schema.ObjectId,
             ref:'Authhh'
-        }
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+        },
+        Accept:{
+          type: String,
+          default: 'not',
+          enum:['ok', 'not']
+        },
+        createAt:{
+            type:Date,
+            default: Date.now()
+        }    
 });
 
-RateSchema.index({ RealStateId: 1, UserId: 1 }, { unique: true });
+RateSchema.pre(/find/, async function(next){
+        this.populate({
+          path:'UserId',
+          select: 'FristName Image LastName  PhoneNumber _id role '
+      })
+      this.populate({
+          path:'RealStateId',
+          select: ' Mortgage Measure City RealStateNumber Area EsquierPhoneNumber EsquierName  _id TypeState SomeRoom '
+      });
+      next();
+})
+// RateSchema.index({ RealStateId: 1, UserId: 1 }, { unique: true });
 
 
 
-RateSchema.statics.calcAverageRatings= async function(RealStateId){
+// RateSchema.statics.calcAverageRatings= async function(RealStateId){
 
-    const stats= await this.aggregate([
-           { $match:{ RealStateId : RealStateId    }
-        },
-        {
-            $group:{
-                _id:'$RealStateid',
-                sum:{$sum:1},
-                rate:{$avg: '$Rate'}
-            }
-        }
-    ]);
+//     const stats= await this.aggregate([
+//            { $match:{ RealStateId : RealStateId    }
+//         },
+//         {
+//             $group:{
+//                 _id:'$RealStateid',
+//                 sum:{$sum:1},
+//                 rate:{$avg: '$Rate'}
+//             }
+//         }
+//     ]);
 
-    if (stats.length > 0) {
-        await RealState.findByIdAndUpdate(RealStateId, {
-          ratingQuntity: stats[0].sum,
-          rating: stats[0].rate
-        });
-      } else {
-        await RealState.findByIdAndUpdate(RealStateId, {
-          ratingsQuantity: 0,
-          rating: 4.5
-        });
-      }
+//     if (stats.length > 0) {
+//         await RealState.findByIdAndUpdate(RealStateId, {
+//           ratingQuntity: stats[0].sum,
+//           rating: stats[0].rate
+//         });
+//       } else {
+//         await RealState.findByIdAndUpdate(RealStateId, {
+//           ratingsQuantity: 0,
+//           rating: 4.5
+//         });
+//       }
 
-}
+// }
 
-RateSchema.post('save', function() {
-    // this points to current review
+// RateSchema.post('save', function() {
+//     // this points to current review
     
-    this.constructor.calcAverageRatings(this.RealStateId);
+//     this.constructor.calcAverageRatings(this.RealStateId);
 
 
-  });
+//   });
   
-  RateSchema.pre(/^findOneAnd/, async function(next) {
+//   RateSchema.pre(/^findOneAnd/, async function(next) {
 
     
-    this.r = await this.findOne();
+//     this.r = await this.findOne();
 
-    next();
-  });
+//     next();
+//   });
   
-  RateSchema.post(/^findOneAnd/, async function() {
-    // await this.findOne(); does NOT work here, query has already executed
-    await this.r.constructor.calcAverageRatings(this.r.RealStateId);
-  });
+//   RateSchema.post(/^findOneAnd/, async function() {
+//     // await this.findOne(); does NOT work here, query has already executed
+//     await this.r.constructor.calcAverageRatings(this.r.RealStateId);
+//   });
   // // findByIdAndUpdate
   // // findByIdAndDelete
   // RateSchema.pre(/^findOneAnd/, async function(next) {

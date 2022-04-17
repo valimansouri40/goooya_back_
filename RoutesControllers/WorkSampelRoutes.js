@@ -8,7 +8,8 @@ router.route('/').get(WorkSampel.GetImg);
 router.route('/:id').delete(WorkSampel.WorkSampelDelete)
 //   router.use();
 
- router.route('/').post(Auth.Protected, Auth.ResterictTo('admin'),WorkSampel.SaveImg, WorkSampel.WorkSpacePost)
+ router.route('/').post(Auth.Protected, Auth.ResterictTo('admin','employee'),
+ WorkSampel.SaveImg, WorkSampel.WorkSpacePost)
 
 
 module.exports= router;

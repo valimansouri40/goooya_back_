@@ -28,7 +28,7 @@ exports.Protected= CatchAsync(async (req, res,next)=>{
         let token;
     
         if( req.headers.authorization  && req.headers.authorization.startsWith('Bearer')){
-                token = req.headers.authorization .split(' ')[1]
+                token = req.headers.authorization.split(' ')[1]
         }else{
             throw('not exist cookie')
         }
@@ -46,18 +46,43 @@ exports.Protected= CatchAsync(async (req, res,next)=>{
         next();
 })
 
+
+exports.ProtectedV2= CatchAsync(async (req, res,next)=>{
+
+    let token;
+    req.user = null;
+    let user;
+    
+    if(req.headers.authorization === 'application/json'){
+        next()
+    }else{
+        
+    token = req.headers.authorization.split(' ')[1];
+    const unhash=await promisify(jwt.verify)(token , process.env.JSONWEBTOKEN_PASSWORD)
+     user= await User.findById(unhash.id);
+    
+    if(!user){
+        next();
+    }
+
+    req.user= user;
+    next();
+    }
+    
+    
+   
+})
+
 exports.Sineup= CatchAsync(async(req,res,next)=>{
 
         if(!req.body) throw('error sineup');
-        console.log(req.body)
-    //await User.deleteMany();
         
          const user = await User.create(req.body);
 
          const code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
-            await user.save({validateBeforeSave:false})
+            await user.save({validateBeforeSave:false});
             console.log(code, user);
             
             SmsHandller(code, req.body.PhoneNumber);
@@ -77,15 +102,15 @@ exports.ReciveSMS=CatchAsync(async (req, res,next)=>{
 
             const user= await User.findOne({PhoneNumber:PhoneNumber});
 
-            if(!PhoneNumber) throw('error cant find your phonenumber')
+            if(!user) throw('error cant find your phonenumber')
 
-            // const code= await user.CreateRandomPass();
-            // user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
-            // user.SineupCode = code;
-            // await user.save({validateBeforeSave:false})
+            const code= await user.CreateRandomPass();
+            user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
+            user.SineupCode = code;
+            await user.save({validateBeforeSave:false})
             
             
-            // SmsHandller(code, PhoneNumber);
+            SmsHandller(code, PhoneNumber);
 
             res.status(200).json({
                 status: 'success',
@@ -99,22 +124,20 @@ exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
             const {smspass}= req.body;
            
 
-            if(!req.body) throw('error notget smspass');
+            if(!smspass) throw('error notget smspass');
            
 
             const user = await User.findOne({SineupCode: smspass,
                 ResetePasswordExpires:{$gt:Date.now()}});
-            
             if(!user) throw('error notget smspass 2');
-           
-
+                
+            
             CreateAndSendCookie(user, res, 200);
             
 });
 
 exports.Login= CatchAsync(async (req,res,next)=>{
-    console.log('login')
-            await User.deleteMany()
+            // await User.deleteMany()
         const {PhoneNumber, Password} = req.body;
 
         if( !PhoneNumber && !Password){
@@ -138,32 +161,25 @@ exports.ForgetPassword=CatchAsync( async (req,res,next)=>{
             if(!PhoneNumber){
                 throw('error forgetpassword 1 ');
             }
-            const user= await User.findOne({PhoneNumber:PhoneNumber});
-
+            
+            const user= await User.findOne({PhoneNumber: PhoneNumber});
+            
             if(!user){
                 throw('error forgetpassword 2');
             }
                 
-            const randombyte =await user.ResetPasswordcode();
-                await user.save({validateBeforeSave:false});
+            const code= await user.CreateRandomPass();
+            user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
+            user.SineupCode = code;
+            await user.save({validateBeforeSave:false})
+            console.log(code, user);
+            
+            SmsHandller(code, req.body.PhoneNumber);
 
-                try{
-                    SmsHandller(randombyte, PhoneNumber);
-                    console.log(randombyte)
-                    res.status(200).json({
-                        status:'success',
-                        
-                    })
-                } catch(er){
-                    
-
-                    user.ResetPassword = undefined;
-                    user.ResetePasswordExpires = undefined;
-                    res.status(404).json({
-                        status:'faill'
-                    })
-                }
-           
+                res.status(200).json({
+                            status:'success',
+                            
+                        })
 
 });
 
@@ -204,8 +220,6 @@ exports.UpdateProfile=UpdateData(User);
 
 exports.ResterictTo= (...roles) => {
     return (req, res, next) => {
-      // roles ['admin', 'lead-guide']. role='user'
-    //   console.log(req.user)
         console.log(roles, req.user.role)
       if (!roles.includes(req.user.role))  throw('your dosent admin')
   
@@ -214,24 +228,24 @@ exports.ResterictTo= (...roles) => {
   };
 
 exports.ChangePassword=CatchAsync(async (req, res,next)=>{
-                console.log(req.body)
+                
             const hash= bycript.hash(req.body.NewPassword,12)
             const user= await User.findByIdAndUpdate(req.user._id,hash).select('+Password');
-            console.log(user)
+
             res.status(200).json({
                 status:'succes',
             })
 })
 
 exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
-            console.log(req.body)
+            
             const {PhoneNumber,FristName}= req.body;
             if(!PhoneNumber, !FristName) throw ('error phn');
             //  await Request.deleteMany()
-            let user= await User.find({PhoneNumber:PhoneNumber});
+            let user= await User.findOne({PhoneNumber:PhoneNumber});
                     let token
                    
-            if(user.length === 0){
+            if(!user){
                 req.body.Password ='12345678';
                 
                  user= await User.create(req.body);
@@ -244,33 +258,73 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                  await user.save({validateBeforeSave:false})
                  console.log(code);
                  
-                // SmsHandller(code, PhoneNumber);
+                SmsHandller(code, PhoneNumber);
                
             }else{
-                req.body.Objid = user[0]._id;
-                 await Request.create(req.body);
-               token= CreateToken(user[0]._id)
-               console.log(user[0]._id)
+                req.body.Objid = user._id;
+                 const vb= await Request.create(req.body);
+            //    token= CreateToken(user._id)
+            const code= await user.CreateRandomPass();
+            user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
+            user.SineupCode = code;
+            await user.save({validateBeforeSave:false})
+              
             }
-
+            
             
      
-     
      res.status(200).json({
-         status: 'success',
-         token: token
+         status: 'success'
      });
   })
 
-  exports.UpdateDataWithField=  UpdateData(User)
+  exports.UpdateDataWithField=  CatchAsync(async (req, res)=>{
+    const param= req.params.id;
+    
+
+    let usercityarr= [];
+        req.body.CitysAndAreas.map(mp=>{
+            usercityarr.push(mp.objid)
+        })
+        // unique Object arr
+        req.body.City = usercityarr.filter((elem, index, self) => self.findIndex(
+                (t) => {return (t.name === elem.name)}) === index);
+
+    const model= await User.findByIdAndUpdate(param, req.body);
+
+    res.status(200).json({
+        status:'success'
+    })
+});
 
 exports.GetOneUser= CatchAsync(async(req, res)=>{
             const param= req.params.id;
-            console.log(param)
+            
             const model = await User.findOne({PhoneNumber: param});
 
             res.status(200).json({
                 status:'success',
                 data: model
             })
+})
+
+
+exports.GetAdvisor=CatchAsync(async (req, res, next)=>{
+
+            const advisor = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}]});
+             
+            let advisorarr = []
+             advisor.map(mp=>
+              //  &&  mp.CitysAndAreas.name === req.query.CityId
+            
+              mp.CitysAndAreas.map(mi=> {
+                mi.areaName === req.query.area? advisorarr.push(mp):null
+            })
+            ) 
+        //   const advisorareafilter = advisorarea.filter(ln=> ln.length > 0 );
+            
+            res.status(200).json({
+                status:'success',
+                data: advisorarr
+            }) 
 })

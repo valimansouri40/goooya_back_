@@ -31,6 +31,7 @@ weather: {
 })
 
 
+
 const City= mongoose.model('city', CitySchema);
 
 module.exports= City;

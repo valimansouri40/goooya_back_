@@ -5,6 +5,7 @@ const RealStateSchema= mongoose.Schema({
             default:false,
             type:Boolean
     },
+ 
 Area: {
     required:[true,'error str'],
         type:String,
@@ -87,7 +88,7 @@ Labi: {
 },
 Lease: {
     
-    type:String,
+    type:Number,
     min:[3,'error length str']
 
 },
@@ -100,12 +101,11 @@ Masahat: {
 },
 Measure: {
     required:[true,'error str'],
-    type:Number,
-    min:40
+    type:Number
 
 },
 Mortgage: {
-    type:String
+    type:Number
 
 },
 OfStorage: {
@@ -204,7 +204,7 @@ AdvisorId:{
         ref:'Authhh'
 },
 RealStateNumber:{
-    type: Number,
+    type: String,
     unique:true,
     required: [true, 'real state not exist']
 },
@@ -220,6 +220,9 @@ Mark:{
     type: Boolean,
     default: false
 },
+NoneId:{
+    type: Number
+},
 createAt:{
     type:Date,
     default: Date.now()
@@ -233,7 +236,7 @@ createAt:{
 RealStateSchema.pre('findOne',async function(next){
         this.populate({
             path:'AdvisorId',
-            select: 'FristName AdvisorAddress LastName Image PhoneNumber _id role '
+            select: 'FristName AdvisorAddress RateAdvisor LastName Image PhoneNumber _id role '
         })
         this.populate({
             path:'RegistrarId',

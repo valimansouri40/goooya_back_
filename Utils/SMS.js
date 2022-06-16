@@ -5,7 +5,7 @@ const SmsSend= kavenegar.KavenegarApi({
 })
 
 const SmsHandller=(randombyte, PhoneNumber)=>{
-    console.log( randombyte, PhoneNumber)
+    // console.log( randombyte, PhoneNumber)
 
     SmsSend.Send({
         message: " : کد تایید هویت شما " + randombyte,
@@ -13,7 +13,7 @@ const SmsHandller=(randombyte, PhoneNumber)=>{
         receptor: PhoneNumber
     },
         function(response, status) {
-            console.log(response);
+            console.log(response, randombyte);
             console.log(status)
     });
 }

@@ -9,12 +9,12 @@ class ApiFeacher{
     filter(){
         const queryobj= {...this.query};
 
-        const araryel= ['page', 'limit','?' , 'sort', '_id'];
+        const araryel= ['page', 'limit','?' , 'sort', '_id', 'length'];
         araryel.forEach(el=> delete queryobj[el] );
 
         let queryStr = JSON.stringify(queryobj);
       queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-    
+        console.log(JSON.parse(queryStr))
       this.data = this.data.find(JSON.parse(queryStr));
     
       return this;
@@ -28,8 +28,6 @@ class ApiFeacher{
         this.data= this.data.find().skip(skip).limit(limit);
         return this;
     }
-
-    
     sort(){
        
             this.data= this.data.find().sort('-createAt')

@@ -1,5 +1,6 @@
 const express= require('express');
 const Auth= require('../Controllers/AuthControllers');
+const { CompressImageProfile } = require('../Controllers/FactoryControllers');
 const router= express.Router();
 
 
@@ -16,7 +17,7 @@ router.route('/gh').get(Auth.Protected,Auth.GetMeData);
 router.use(Auth.Protected);
 
 router.route('/changepassword').post(Auth.ChangePassword)
-router.route('/updateprofile/:id').patch(Auth.UpdateProfile);
+router.route('/updateprofile/:id').patch(Auth.Protected,CompressImageProfile ,Auth.UpdateProfile);
 
 router.route('/getadvisor').get(Auth.ResterictTo('admin', 'employee'), Auth.GetAdvisor);
 

@@ -1,7 +1,7 @@
 const Filter = require("../ModelsControllers/FilterModels");
 const Filterrh = require("../ModelsControllers/FilterModelsrh");
 const { CatchAsync } = require("../Utils/CatchAsync");
-const price= [{value:'', text:'همه'},
+const price= [
 {value: '&Mortgage[gte]=500000000&Mortgage[lte]=1000000000', text:'500 میلیون'},
 {value: '&Mortgage[gte]=1000000000&Mortgage[lte]=2000000000', text:'1میلیارد'},
 {value: '&Mortgage[gte]=2000000000&Mortgage[lte]=5000000000', text:'2 میلیارد'},
@@ -13,7 +13,7 @@ const price= [{value:'', text:'همه'},
 ,{value: '&Mortgage[gte]=200000000000&Mortgage[lte]=300000000000', text:'200 میلیارد'},
 {value: '&Mortgage[gte]=300000000000', text:'بیشتر از 300 میلیارد'}]
 
-const Measure=[{value:'', text:'همه'},{value:'&Measure[lte]=50', text:'کمتر از 50'}
+const Measure=[{value:'&Measure[lte]=50', text:'کمتر از 50'}
 ,{value:'&Measure[gte]=50&Measure[lte]=70', text:'60متر'},
 {value:'&Measure[gte]=70&Measure[lte]=80', text:'70متر'},
 {value:'&Measure[gte]=80&Measure[lte]=90', text:'80متر'},
@@ -24,7 +24,6 @@ const Measure=[{value:'', text:'همه'},{value:'&Measure[lte]=50', text:'کمت
 {value:'&Measure[gte]=160', text:'بیشتر از 160 متر'},]
 
 const YearBuild=[
-    {value:'', text:'همه'},
     {value:'&YearBuild[lte]=2', text:' کمتر از 2 سال'},
     {value:'&YearBuild[gte]=2&YearBuild[lte]=5', text:'بین 2 تا 5 سال'},
     {value:'&YearBuild[gte]=5&YearBuild[lte]=10', text:'بیت 5 تا 10 سال'},
@@ -46,17 +45,17 @@ exports.GetFilter= CatchAsync(async(req, res)=>{
            
 })
 
-const price1= [{value:'', text:'همه'},
-{value: '&Mortgage[gte]=&Mortgage[lte]=1000000000', text:' از 100 میلیون تا 300 میلیون'},
-{value: '&Mortgage[gte]=1000000000&Mortgage[lte]=2000000000', text:'از 300 میلیون تا 600 میلیون'},
-{value: '&Mortgage[gte]=2000000000&Mortgage[lte]=5000000000', text:'از 600 میلیون تا 1 میلیارد'},
-{value: '&Mortgage[gte]=5000000000&Mortgage[lte]=10000000000', text:'از 1 میلیارد تا 2 میلیارد'}
-,{value:'&Mortgage[gte]=10000000000&Mortgage[lte]=20000000000', text:'از 2 میلیارد تا 3 میلیارد'},
-{value: '&Mortgage[gte]=20000000000&Mortgage[lte]=50000000000', text:'از 3 میلیارد تا 5 میلیارد'},
+const price1= [
+{value: '&Mortgage[gte]=100000000&Mortgage[lte]=3000000000', text:' از 100 میلیون تا 300 میلیون'},
+{value: '&Mortgage[gte]=3000000000&Mortgage[lte]=6000000000', text:'از 300 میلیون تا 600 میلیون'},
+{value: '&Mortgage[gte]=6000000000&Mortgage[lte]=10000000000', text:'از 600 میلیون تا 1 میلیارد'},
+{value: '&Mortgage[gte]=10000000000&Mortgage[lte]=20000000000', text:'از 1 میلیارد تا 2 میلیارد'}
+,{value:'&Mortgage[gte]=20000000000&Mortgage[lte]=30000000000', text:'از 2 میلیارد تا 3 میلیارد'},
+{value: '&Mortgage[gte]=30000000000&Mortgage[lte]=50000000000', text:'از 3 میلیارد تا 5 میلیارد'},
 {value: '&Mortgage[gte]=50000000000&Mortgage[lte]=100000000000', text:'از 5 میلیارد تا 10 میلیارد'},
-{value: '&Mortgage[gte]=300000000000', text:'بیشتر از 10 میلیارد'}]
+{value: '&Mortgage[gte]=100000000000', text:'بیشتر از 10 میلیارد'}]
 
-const Lease= [{value:'', text:'همه'},
+const Lease= [
 {value: '&Lease[lte]=5000000', text:'پایین تر از 5 میلیون'},
 {value: '&Lease[gte]=5000000&Lease[lte]=10000000', text:'از 5 میلیون تا 10 میلیون'},
 {value: '&Lease[gte]=10000000&Lease[lte]=20000000', text:'از 10 میلیون تا 20 میلیون'},

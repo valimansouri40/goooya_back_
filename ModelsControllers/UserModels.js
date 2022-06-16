@@ -39,7 +39,7 @@ const UserSchema= mongoose.Schema({
         },
         role:{
             type:String,
-            default:'admin',
+            default:'user',
             enum:['admin','user', 'advisor', 'employee', 'dealer']
         },
         CitysAndAreas:{
@@ -47,6 +47,15 @@ const UserSchema= mongoose.Schema({
         },
         City:{
             type: Array
+        },
+        RateAdvisor:{
+            type:Number,
+            max:[5,''],
+            min:[1,''],
+            default: 4.5
+        },
+        ratingQuntity:{
+            type:Number
         },
         AdvisorAddress:{
             type: String

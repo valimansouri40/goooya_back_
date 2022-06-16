@@ -1,10 +1,9 @@
 const { CatchAsync } = require("../Utils/CatchAsync");
 const ApiFeacher= require('../Utils/ApiFeacher');
 const fs= require('fs');
-const User = require("../ModelsControllers/UserModels");
 const SearchQuery = require("../ModelsControllers/SearchQueryModels");
 const Mark = require("../ModelsControllers/MarkModels");
-
+const sharp = require("sharp");
 
 exports.PostData= Model => (CatchAsync(async (req, res)=>{
     
@@ -24,7 +23,7 @@ exports.GetOneData= Model => CatchAsync(async (req, res, next)=>{
         let arrimg=[]
                 model.Image.map(im=>{
                     // realstate-1648546291143-1.jpeg
-                    arrimg.push(fs.readFileSync(`public/img/${im}`,'base64'))
+                    arrimg.push(fs.existsSync(`public/img/${im}`)?fs.readFileSync(`public/img/${im}`,'base64'):null)
         })
         
         model.Image= arrimg;
@@ -34,6 +33,15 @@ exports.GetOneData= Model => CatchAsync(async (req, res, next)=>{
     })
 });
 
+exports.LikeRealState = (req, Model)=>{
+    let lessQuery = {...req.query};
+    const queryDeleteArr = ['Area', 'Mortgage','TypeState'];
+    queryDeleteArr.forEach(mp=> delete lessQuery[mp]);
+    
+    const modelfeacher2= new ApiFeacher( Model.find(), lessQuery).filter().sort().paginate();
+    
+    return  modelfeacher2.data;
+}
 
 exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
     let model
@@ -49,16 +57,23 @@ exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
     if(queryStr.length > 2){
     await SearchQuery.create({queryObj: req.query})
     }
-    const modelfeacher= new ApiFeacher( Model.find(), req.query).filter().sort().paginate();
-       model = await modelfeacher.data;
+        const modelfeacher= new ApiFeacher( Model.find(), req.query).filter().sort().paginate();
+            model = await modelfeacher.data;
        
-      const ln =  new ApiFeacher( Model.find(), req.query).filterandlength()
-    const lengthall=( await ln.data).length;
+        const ln =  new ApiFeacher( Model.find(), req.query).filterandlength()
+        const lengthall=( await ln.data).length;
+
+       
+        if( (model.length === 1 || model.length === 0) && req.query.length === 'notexist'){
+            model = await this.LikeRealState(req, Model);
+        }
+
+        
 
 
         await Promise.all(model.map(async(mp, i)=>{
-        
-            model[i].Image = [fs.readFileSync(`public/img/${mp.Image[0]}`,'base64')];
+            let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
+            model[i].Image = [imageCu];
             if(useerid){
                 const Markfinding= await Mark.findOne({RealStateId: mp._id, UserId: useerid });
              if(Markfinding){
@@ -66,7 +81,7 @@ exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
              }
             }
       }))
-      
+     
     res.status(200).json({
         status:'success',
         data: model,
@@ -74,9 +89,30 @@ exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
     })
 });
 
+exports.CompressImageProfile = CatchAsync(async (req, res, next)=>{
+
+        if(!req.body.Image) next();
+        // const filename = `realstate-${req.user._id}-${ 1000001}.jpeg`;
+        
+        const fl= req.body.Image.split(';base64,').pop();
+        let imgBuffer = Buffer.from(fl, 'base64');
+           
+       await sharp(imgBuffer).jpeg({ quality: 10 })
+      .resize(1920, 1000).toBuffer()
+      .then(data => {
+        req.body.Image = 'data:image/jpeg;base64,' + Buffer.from(data).toString('base64')
+          
+      })
+      .catch(err => console.log(`downisze issue ${err}`))
+    
+
+      next()
+})
+
 exports.UpdateData= Model => CatchAsync(async (req, res)=>{
     const param= req.params.id;
    
+    
     
     const model= await Model.findByIdAndUpdate(param, req.body);
     
@@ -102,50 +138,13 @@ exports.DeleteOneData= Model => (CatchAsync(async (req, res)=>{
 
 //navigator.clipboard.writeText(copyText.value);
 
-// exports.CreateRequest=model=>CatchAsync(async (req, res, next)=>{
-//     console.log(req.body)
-//     const {PhoneNumber,FristName}= req.body;
-//     if(!PhoneNumber, !FristName) throw ('error phn');
-//         // await User.deleteMany()
-//     let user= await User.find({PhoneNumber:PhoneNumber});
-//             let token
-           
-//     if(user.length === 0){
-//         req.body.Password ='12345678';
-        
-//          user= await User.create(req.body);
-//          if(!user) throw('error')
-//          req.body.Objid = user._id;
-//          const rd= await model.create(req.body)
-//          const code= await user.CreateRandomPass();
-//          user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
-//          user.SineupCode = code;
-//          await user.save({validateBeforeSave:false})
-//          console.log(code);
-         
-//         // SmsHandller(code, PhoneNumber);
-       
-//     }else{
-//         req.body.Objid = user._id;
-//          await model.create(req.body);
-//        token= CreateToken(user._id)
-       
-//     }
-
-// res.status(200).json({
-//  status: 'success',
-//  token: token
-// });
-// })
-
-
 
 
 exports.GetLimitData=Model=>CatchAsync(async(req, res, next)=>{
         
     const modelfeacher= new ApiFeacher( Model.find(), req.query).paginate().sort().filter();
     const model = await modelfeacher.data;
-        
+       
     const ln =  new ApiFeacher( Model.find(), req.query).filterandlength()
     const lengthall=( await ln.data).length;
         

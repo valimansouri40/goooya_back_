@@ -14,19 +14,25 @@ const Filter= require('./RoutesControllers/FilterRoutes');
 const Reviwe= require('./RoutesControllers/Reviwe&rateRoutes');
 const Appointment= require('./RoutesControllers/AppointmentRoutes');
 const Mark = require('./RoutesControllers/MarkRoutes');
+const RateAd = require('./RoutesControllers/RateAdvisor');
+const fs = require('fs')
 
 
-app.use(express.json({limit: '30mb'}));
+app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true,limit: '50mb'}));
 
 app.use((req,res,next)=>{
-        console.log('middleware')
 
+        console.log('middleware',)
+
+        // fs.writeFileSync('Utils/vali.ts', 'valii mansouri')
+        
     next();
 })
 
 app.use(cors({
-    origin:'http://localhost:3000', 
+  origin:"http://localhost:3000" , 
+    // process.env.CLIENT_URL, 
     credentials:true
 }))
 
@@ -39,7 +45,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Limit requests from same API
 const limiter = rateLimit({
-  max: 1000,
+  max: 400,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
@@ -60,6 +66,7 @@ app.use('/api/v1/filter', Filter);
 app.use('/api/v1/reviwe', Reviwe);
 app.use('/api/v1/appointment', Appointment);
 app.use('/api/v1/Mark', Mark);
+app.use('/api/v1/RateAdvisor', RateAd);
 
 
 module.exports= app;

@@ -34,23 +34,29 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
         const realstate= await RealState.findById(paramm);
             
         realstate.Image.forEach(path => fs.existsSync(`public/img/${path}`) 
-        && fs.unlinkSync(`public/img/${path}`))
+        && fs.unlinkSync(`public/img/${path}`));
+
         next();
 })
 
 exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
 
-const fn= await RealState.findOne({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
-console.log(fn ,req.body.RealStateNumber);
-if(fn){
- req.body.RealStateNumber = fn.RealStateNumber * 1  + 2;
+    const fn= await RealState.find({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
+    
+    if(fn){
+    //     const fn =
+    // req.body.RealStateNumber = fn.RealStateNumber + 2;
+   
+     const RSNUM = (req.body.cityandareaid ).toString() + `${1000 + fn.length}`;
+    req.body.RealStateNumber = RSNUM;
  
-}else{
- req.body.RealStateNumber = req.body.cityandareaid + '1000';
- req.body.RealStateNumber = req.body.RealStateNumber * 1;
+    }else{
+
+    req.body.RealStateNumber = (req.body.cityandareaid ).toString() + '1000';
+    req.body.RealStateNumber = req.body.RealStateNumber * 1;
     
 }
-console.log(fn ,req.body.RealStateNumber);
+console.log(fn.length ,req.body.RealStateNumber);
 //  await RealState.deleteMany();
    next();
 });
@@ -71,7 +77,7 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
         const fl= file.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
            
-      await sharp(imgBuffer).jpeg({ quality: 30 })
+      await sharp(imgBuffer).jpeg({ quality: 50 })
       .resize(1920, 1000)
       .toFile(`public/img/${filename}`)
       .then(data => {
@@ -90,6 +96,9 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
    
+    if(req.user.role === 'dealer' ){
+        req.body.NoneId= 1234
+    }
     await RealState.create(req.body);
       
         res.status(200).json({

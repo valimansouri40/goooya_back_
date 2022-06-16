@@ -24,7 +24,7 @@ const CreateAndSendCookie=(user,res,Status)=>{
 
 
 exports.Protected= CatchAsync(async (req, res,next)=>{
-
+            
         let token;
     
         if( req.headers.authorization  && req.headers.authorization.startsWith('Bearer')){
@@ -76,15 +76,18 @@ exports.ProtectedV2= CatchAsync(async (req, res,next)=>{
 exports.Sineup= CatchAsync(async(req,res,next)=>{
 
         if(!req.body) throw('error sineup');
-        
+        console.log(req.body)
+            if( (await User.find()).length === 0){
+                req.body.role = 'admin';
+                }else{
+                    req.body.role = 'user';
+                }
          const user = await User.create(req.body);
-
          const code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
             await user.save({validateBeforeSave:false});
-            console.log(code, user);
-            
+            // const user = await User.create(req.body);
             SmsHandller(code, req.body.PhoneNumber);
         
         res.status(200).json({
@@ -208,7 +211,10 @@ exports.ResetPassword=CatchAsync(async (req,res,next)=>{
 
 exports.GetMeData=CatchAsync( async (req, res)=>{
             
-           
+      
+        //    if(req.user.Image && req.user.Image.endsWith("jpeg")){
+        //    req.user.Image = fs.readFileSync(`public/img/${req.user.Image}`, "base64");
+        // }
         res.status(200).json({
             status:'success',
             data: req.user
@@ -220,7 +226,7 @@ exports.UpdateProfile=UpdateData(User);
 
 exports.ResterictTo= (...roles) => {
     return (req, res, next) => {
-        console.log(roles, req.user.role)
+        // console.log(roles, req.user.role)
       if (!roles.includes(req.user.role))  throw('your dosent admin')
   
       next();
@@ -228,10 +234,10 @@ exports.ResterictTo= (...roles) => {
   };
 
 exports.ChangePassword=CatchAsync(async (req, res,next)=>{
-                
-            const hash= bycript.hash(req.body.NewPassword,12)
-            const user= await User.findByIdAndUpdate(req.user._id,hash).select('+Password');
-
+    
+            const hash=await bycript.hash(req.body.NewPassword,12)
+            await User.findByIdAndUpdate(req.user._id,{Password: hash}).select('+Password');
+              
             res.status(200).json({
                 status:'succes',
             })
@@ -240,10 +246,17 @@ exports.ChangePassword=CatchAsync(async (req, res,next)=>{
 exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
             
             const {PhoneNumber,FristName}= req.body;
+            const id = req.query._id;
             if(!PhoneNumber, !FristName) throw ('error phn');
             //  await Request.deleteMany()
-            let user= await User.findOne({PhoneNumber:PhoneNumber});
-                    let token
+            let user
+            if(id !== ''){
+                user = await User.findById(id)
+            }else{
+
+                user= await User.findOne({PhoneNumber:PhoneNumber});
+            }
+                //    console.log(id,"vali", user)
                    
             if(!user){
                 req.body.Password ='12345678';
@@ -256,7 +269,7 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                  user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
                  user.SineupCode = code;
                  await user.save({validateBeforeSave:false})
-                 console.log(code);
+                //  console.log(code);
                  
                 SmsHandller(code, PhoneNumber);
                
@@ -264,11 +277,12 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                 req.body.Objid = user._id;
                  const vb= await Request.create(req.body);
             //    token= CreateToken(user._id)
+            if(id === ''){
             const code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
             await user.save({validateBeforeSave:false})
-              
+            SmsHandller(code, PhoneNumber);}
             }
             
             

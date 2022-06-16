@@ -7,7 +7,7 @@ const router = express.Router();
 
 
     router.route('/')
-    .post(Auth.Protected, Auth.ResterictTo('admin','dealer','employee'),
+    .post(Auth.Protected, Auth.ResterictTo('admin','dealer','employee','advisor'),
      State.CreateRealStateNumber,
         State.ImageHandller ,State.PostRealState);
 

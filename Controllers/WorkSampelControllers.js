@@ -40,7 +40,7 @@ exports.WorkSpacePost= CatchAsync(async (req, res,next)=>{
                    sampel= await WorkSampel.create(req.body)
                 }else if(fn.length > 0){
                   await WorkSampel.deleteOne({Tab: req.body.Tab})
-                  const bnd= await WorkSampel.create(req.body);
+                   await WorkSampel.create(req.body);
                 }
             }
            
@@ -58,7 +58,7 @@ exports.GetImg=CatchAsync(async(req, res, next)=>{
           
              ws.map(mp=>{
                  if(mp.Image){
-                    const kl= fs.readFileSync(`public/WorkSampelimg/${mp.Image}`,'base64');
+                    const kl= fs.existsSync(`public/WorkSampelimg/${mp.Image}`)?fs.readFileSync(`public/WorkSampelimg/${mp.Image}`,'base64'):null;
                     mp.Image = kl;
                   }
             });

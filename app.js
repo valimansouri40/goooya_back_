@@ -31,7 +31,7 @@ app.use((req,res,next)=>{
 })
 
 app.use(cors({
-  origin:"http://localhost:3000" , 
+  origin:"https://goooya.ir" , 
     // process.env.CLIENT_URL, 
     credentials:true
 }))

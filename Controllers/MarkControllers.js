@@ -56,9 +56,9 @@ exports.GetAllMyMark=CatchAsync(async(req, res)=>{
     const querymark = new ApiFeacher( Mark.find({ UserId: userid }), req.query).sort().paginate();
    let mark= await querymark.data;
     
-   
+   console.log(mark[0])
     mark.map((mp,i)=>{
-        let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
+        let imageCu = fs.existsSync(`public/img/${mp.RealStateId.Image[0]}`)?fs.readFileSync(`public/img/${mp.RealStateId.Image[0]}`,'base64'):''
         
        mark[i].RealStateId.Image = [imageCu];
 

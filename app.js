@@ -38,10 +38,7 @@ app.use(cors({
 
 app.use(helmet());
 
-// Development logging
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+
 
 // Limit requests from same API
 const limiter = rateLimit({

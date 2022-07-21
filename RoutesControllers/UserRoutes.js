@@ -4,6 +4,7 @@ const { CompressImageProfile } = require('../Controllers/FactoryControllers');
 const router= express.Router();
 
 
+router.route('/google').post(Auth.GoogleLogin);
 router.route('/sineup').post(Auth.Sineup);
 router.route('/login').post(Auth.Login);
 router.route('/forgotpassword').post(Auth.ForgetPassword);

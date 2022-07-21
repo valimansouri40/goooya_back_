@@ -33,7 +33,8 @@ const YearBuild=[
 ]
 exports.GetFilter= CatchAsync(async(req, res)=>{
                 
-                const exist= await Filter.findOne();
+        const exist= await Filter.findOne();
+
                 if(!exist){
             await Filter.create({YearBuild:YearBuild, Price:price, Measure:Measure})
         }
@@ -46,14 +47,14 @@ exports.GetFilter= CatchAsync(async(req, res)=>{
 })
 
 const price1= [
-{value: '&Mortgage[gte]=100000000&Mortgage[lte]=3000000000', text:' از 100 میلیون تا 300 میلیون'},
-{value: '&Mortgage[gte]=3000000000&Mortgage[lte]=6000000000', text:'از 300 میلیون تا 600 میلیون'},
-{value: '&Mortgage[gte]=6000000000&Mortgage[lte]=10000000000', text:'از 600 میلیون تا 1 میلیارد'},
-{value: '&Mortgage[gte]=10000000000&Mortgage[lte]=20000000000', text:'از 1 میلیارد تا 2 میلیارد'}
-,{value:'&Mortgage[gte]=20000000000&Mortgage[lte]=30000000000', text:'از 2 میلیارد تا 3 میلیارد'},
-{value: '&Mortgage[gte]=30000000000&Mortgage[lte]=50000000000', text:'از 3 میلیارد تا 5 میلیارد'},
-{value: '&Mortgage[gte]=50000000000&Mortgage[lte]=100000000000', text:'از 5 میلیارد تا 10 میلیارد'},
-{value: '&Mortgage[gte]=100000000000', text:'بیشتر از 10 میلیارد'}]
+{value: '&Mortgage[gte]=100000000&Mortgage[lte]=300000000', text:' از 100 میلیون تا 300 میلیون'},
+{value: '&Mortgage[gte]=300000000&Mortgage[lte]=600000000', text:'از 300 میلیون تا 600 میلیون'},
+{value: '&Mortgage[gte]=600000000&Mortgage[lte]=1000000000', text:'از 600 میلیون تا 1 میلیارد'},
+{value: '&Mortgage[gte]=1000000000&Mortgage[lte]=2000000000', text:'از 1 میلیارد تا 2 میلیارد'}
+,{value:'&Mortgage[gte]=2000000000&Mortgage[lte]=3000000000', text:'از 2 میلیارد تا 3 میلیارد'},
+{value: '&Mortgage[gte]=3000000000&Mortgage[lte]=5000000000', text:'از 3 میلیارد تا 5 میلیارد'},
+{value: '&Mortgage[gte]=5000000000&Mortgage[lte]=10000000000', text:'از 5 میلیارد تا 10 میلیارد'},
+{value: '&Mortgage[gte]=10000000000', text:'بیشتر از 10 میلیارد'}]
 
 const Lease= [
 {value: '&Lease[lte]=5000000', text:'پایین تر از 5 میلیون'},
@@ -67,6 +68,7 @@ const Lease= [
 exports.GetFilterrh= CatchAsync(async(req, res)=>{
     
     const exist= await Filterrh.findOne();
+    //  await Filterrh.deleteMany();
     if(!exist){
         await Filterrh.create({YearBuild:YearBuild, Price:price1, Measure:Measure, Lease:Lease})}
         const filter= await Filterrh.findOne();

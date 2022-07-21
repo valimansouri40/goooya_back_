@@ -204,7 +204,7 @@ AdvisorId:{
         ref:'Authhh'
 },
 RealStateNumber:{
-    type: String,
+    type: Number,
     unique:true,
     required: [true, 'real state not exist']
 },

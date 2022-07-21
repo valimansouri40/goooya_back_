@@ -76,8 +76,7 @@ RateAdvisorSchema.post('save', function() {
     // await this.findOne(); does NOT work here, query has already executed
     await this.r.constructor.calcAverageRatings(this.r.UserId);
   });
-  // findByIdAndUpdate
-  // findByIdAndDelete
+  
   RateAdvisorSchema.pre(/^findOneAnd/, async function(next) {
     this.r = await this.findOne();
     next();

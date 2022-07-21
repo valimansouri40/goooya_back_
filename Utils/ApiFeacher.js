@@ -14,7 +14,7 @@ class ApiFeacher{
 
         let queryStr = JSON.stringify(queryobj);
       queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-        console.log(JSON.parse(queryStr))
+        // console.log(JSON.parse(queryStr))
       this.data = this.data.find(JSON.parse(queryStr));
     
       return this;

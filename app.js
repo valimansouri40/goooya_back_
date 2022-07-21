@@ -15,7 +15,8 @@ const Reviwe= require('./RoutesControllers/Reviwe&rateRoutes');
 const Appointment= require('./RoutesControllers/AppointmentRoutes');
 const Mark = require('./RoutesControllers/MarkRoutes');
 const RateAd = require('./RoutesControllers/RateAdvisor');
-const fs = require('fs')
+// require('./Utils/passport');
+// const fs = require('fs')
 
 
 app.use(express.json({limit: '50mb'}));
@@ -24,14 +25,14 @@ app.use(express.urlencoded({ extended: true,limit: '50mb'}));
 app.use((req,res,next)=>{
 
         console.log('middleware',)
-
+        
         // fs.writeFileSync('Utils/vali.ts', 'valii mansouri')
         
     next();
 })
 
 app.use(cors({
-  origin:"https://goooya.ir" , 
+  origin:"http://localhost:3000" , 
     // process.env.CLIENT_URL, 
     credentials:true
 }))
@@ -67,3 +68,4 @@ app.use('/api/v1/RateAdvisor', RateAd);
 
 
 module.exports= app;
+// 6.2.4

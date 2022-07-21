@@ -17,6 +17,7 @@
     "express": "^4.17.3",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.3.0",
+    "google-auth-library": "^8.1.0",
     "helmet": "^5.0.2",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",

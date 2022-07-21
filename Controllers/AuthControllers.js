@@ -7,6 +7,8 @@ const { promisify } = require("util");
 const { UpdateData } = require("./FactoryControllers");
 const Request= require('../ModelsControllers/RequestModels')
 const bycript= require('bcryptjs')
+const {OAuth2Client} = require('google-auth-library')
+const Client = new OAuth2Client({clientId:`709781770915-dnq6slr51r4477egfirredte8aasli1j.apps.googleusercontent.com`});
 
 const CreateToken= (id)=> jwt.sign({id}, process.env.JSONWEBTOKEN_PASSWORD,{
     expiresIn: process.env.JSONWEBTOKEN_EXPIRES});
@@ -21,7 +23,24 @@ const CreateAndSendCookie=(user,res,Status)=>{
         })
 }
 
+exports.GoogleLogin = CatchAsync(async(req, res, next)=>{
 
+        const {token} = req.body;
+            console.log('vali',req.body)
+        const ticket = await Client.verifyIdToken({
+            idToken: token,
+            audience: "709781770915-dnq6slr51r4477egfirredte8aasli1j.apps.googleusercontent.com"
+        });
+
+        const { name, email, picture } = ticket.getPayload();
+        console.log( name, email, picture, 'vali mansouri' )
+
+        res.status(200).json({
+            status: 'Success',
+            
+        })
+
+})
 
 exports.Protected= CatchAsync(async (req, res,next)=>{
             
@@ -76,12 +95,18 @@ exports.ProtectedV2= CatchAsync(async (req, res,next)=>{
 exports.Sineup= CatchAsync(async(req,res,next)=>{
 
         if(!req.body) throw('error sineup');
-        console.log(req.body)
+        const existNumber = await User.findOne({PhoneNumber: req.body.PhoneNumber});
+        console.log(existNumber)
+           
             if( (await User.find()).length === 0){
                 req.body.role = 'admin';
                 }else{
                     req.body.role = 'user';
                 }
+        if(existNumber){
+                res.status(200).json({error:"این شماره قبلا ثبت شده است"});
+                throw('exist')
+        }
          const user = await User.create(req.body);
          const code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
@@ -132,15 +157,15 @@ exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
 
             const user = await User.findOne({SineupCode: smspass,
                 ResetePasswordExpires:{$gt:Date.now()}});
-            if(!user) throw('error notget smspass 2');
-                
+            if(!user) {res.status(200).json({error:"کد وارد شده تطابق ندارد"});
+                throw("کد وارد شده تطابق ندارد")}
             
             CreateAndSendCookie(user, res, 200);
             
 });
 
 exports.Login= CatchAsync(async (req,res,next)=>{
-            // await User.deleteMany()
+            
         const {PhoneNumber, Password} = req.body;
 
         if( !PhoneNumber && !Password){
@@ -151,8 +176,10 @@ exports.Login= CatchAsync(async (req,res,next)=>{
         const user= await User.findOne({PhoneNumber: PhoneNumber})
         .select('Password');
 
-        if(!user || !(await user.compirePassword( Password,user.Password))) throw('error login compirePassword');
-
+        if(!user || !(await user.compirePassword( Password,user.Password))) {
+         res.status(200).json({error:user?'پسوورد وارد شده صحیح نمی باشد':'این شماره ثبت نشده است'})
+            throw('error login compirePassword');
+        }
         CreateAndSendCookie(user, res, 200);
 });
 
@@ -168,7 +195,9 @@ exports.ForgetPassword=CatchAsync( async (req,res,next)=>{
             const user= await User.findOne({PhoneNumber: PhoneNumber});
             
             if(!user){
-                throw('error forgetpassword 2');
+                // throw('error forgetpassword 2');
+                res.status(200).json({error:'این شماره ثبت نشده است'})
+                throw('این شماره ثبت نشده است')
             }
                 
             const code= await user.CreateRandomPass();
@@ -248,7 +277,7 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
             const {PhoneNumber,FristName}= req.body;
             const id = req.query._id;
             if(!PhoneNumber, !FristName) throw ('error phn');
-            //  await Request.deleteMany()
+         
             let user
             if(id !== ''){
                 user = await User.findById(id)
@@ -256,7 +285,7 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
 
                 user= await User.findOne({PhoneNumber:PhoneNumber});
             }
-                //    console.log(id,"vali", user)
+                
                    
             if(!user){
                 req.body.Password ='12345678';

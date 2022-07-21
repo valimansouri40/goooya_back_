@@ -9,6 +9,8 @@ const fs= require('fs');
 const Mark = require('../ModelsControllers/MarkModels');
 const Appointment = require('../ModelsControllers/AppointmentModels');
 const Rate = require('../ModelsControllers/RateModels');
+const { Citys } = require('../City&Area/city');
+const { Areas } = require('../City&Area/Areas');
 
 const multerStorage = multer.memoryStorage();
 
@@ -39,25 +41,22 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
         next();
 })
 
+const IdHandller = (lastId)=>{
+    const pers = 1 / lastId;
+    const bettween = (pers + 1) * lastId;
+    return bettween;
+}
 exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
 
     const fn= await RealState.find({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
     
-    if(fn){
-    //     const fn =
-    // req.body.RealStateNumber = fn.RealStateNumber + 2;
-   
-     const RSNUM = (req.body.cityandareaid ).toString() + `${1000 + fn.length}`;
-    req.body.RealStateNumber = RSNUM;
+    if(fn.length > 0){
+    req.body.RealStateNumber = IdHandller(fn[0].RealStateNumber);
  
     }else{
-
-    req.body.RealStateNumber = (req.body.cityandareaid ).toString() + '1000';
-    req.body.RealStateNumber = req.body.RealStateNumber * 1;
+    req.body.RealStateNumber = req.body.cityandareaid;
     
 }
-console.log(fn.length ,req.body.RealStateNumber);
-//  await RealState.deleteMany();
    next();
 });
 
@@ -100,9 +99,8 @@ exports.PostRealState= CatchAsync(async (req, res, next)=>{
         req.body.NoneId= 1234
     }
     await RealState.create(req.body);
-      
         res.status(200).json({
-            status:'succes',
+            status:'success',
         })
        
 });
@@ -129,16 +127,15 @@ exports.DeleteOneRealState= CatchAsync(async (req, res)=>{
 exports.WriteCity=CatchAsync(async (req,res,next)=>{
     
         const filter= await City.find({...req.body});
+        
         if(filter.length  < 1){
          await City.create(req.body);
 
         res.status(200).json({
-            status:'succes',
+            status:'success',
         })}
         next()
 });
-
-
 
 
 exports.WriteArea=CatchAsync( async(req, res, next)=>{
@@ -152,17 +149,27 @@ exports.WriteArea=CatchAsync( async(req, res, next)=>{
     if(filter.length  < 1){
      await Area.create(req.body);
     res.status(200).json({
-        status:'succes',
+        status:'success',
     })
     } 
-    next()
+    next();
 })
 
 exports.GetAllCity=CatchAsync( async( req, res)=>{
 
         const city= await City.find();
+        // await City.deleteMany();
+        // await Area.deleteMany();
+        console.log('vali', Areas.length)
+        if(city.length === 0){
+            await Promise.all(
+            Citys.map(async(mp)=>{
+                await City.create({...mp});
+            }))
+         
+        }
         res.status(200).json({
-            status: 'succes',
+            status: 'success',
             data: city
         })
 });
@@ -170,9 +177,23 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
 exports.GetAllArea=CatchAsync( async( req, res)=>{
         const id= req.query.id;
         
-    const city= await Area.find({objid: id});
+    const city= await Area.find({CityId: id});
+    const ae = await Area.find();
+    if(ae.length === 0){
+        console.log("create")
+        await Promise.all(
+            Areas.map(async(mp,i)=>{
+                //    if(mp.CityId !== 621){ 
+                    //    let CId = await City.find({Id: mp.CityId});
+                    let AreaId = `${100 + i}` + mp.CityId ;
+                    await Area.create({Id: AreaId, ...mp });
+                    console.log(AreaId, Number(AreaId), mp.CityId);}
+                    
+                    ));
+        console.log(ae.length, Areas.length)
+                }
     res.status(200).json({
-        status: 'succes',
+        status: 'success',
         data: city
     })
 });
@@ -181,8 +202,9 @@ exports.FindCity=CatchAsync(async(req, res)=>{
     const id= req.query.city;
     
     const city= await City.find({name:id});
+
     res.status(200).json({
-        status: 'succes',
+        status: 'success',
         data: city
     })
         
@@ -192,7 +214,7 @@ exports.FilterCity=CatchAsync(async(req, res)=>{
     const id= req.query.id;
     await City.findByIdAndDelete(id);
     res.status(200).json({
-        status: 'succes',
+        status: 'success',
         
     })
 })
@@ -204,7 +226,7 @@ exports.FindArea=CatchAsync(async(req, res)=>{
     
 
     res.status(200).json({
-        status: 'succes',
+        status: 'success',
         data: city
     })
 })
@@ -214,7 +236,7 @@ exports.FilterArea=CatchAsync(async(req, res)=>{
     
     await Area.findByIdAndDelete(id);
     res.status(200).json({
-        status: 'succes',
+        status: 'success',
         
     })
 })

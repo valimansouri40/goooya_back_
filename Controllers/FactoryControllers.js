@@ -50,7 +50,7 @@ exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
     const useerid= req.query._id;
     const araryel= ['page', 'limit', 'sort','?', '_id'];
     araryel.forEach(el=> delete queryobj[el] );
-    // await Model.deleteMany()
+    
     let queryStr = JSON.stringify(queryobj);
 
         
@@ -97,8 +97,8 @@ exports.CompressImageProfile = CatchAsync(async (req, res, next)=>{
         const fl= req.body.Image.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
            
-       await sharp(imgBuffer).jpeg({ quality: 10 })
-      .resize(1920, 1000).toBuffer()
+       await sharp(imgBuffer).jpeg({ quality: 30 })
+      .resize(700, 500).toBuffer()
       .then(data => {
         req.body.Image = 'data:image/jpeg;base64,' + Buffer.from(data).toString('base64')
           

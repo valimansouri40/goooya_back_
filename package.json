@@ -1,11 +1,11 @@
 {
   "name": "real-state",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real State Advisor web app",
   "main": "app.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": " nodemon server.js"
   },
   "author": "",
   "license": "ISC",

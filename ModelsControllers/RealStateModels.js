@@ -201,7 +201,8 @@ RegistrarId:{
 },
 AdvisorId:{
     type:mongoose.Schema.ObjectId,
-        ref:'Authhh'
+        ref:'Authhh',
+    
 },
 RealStateNumber:{
     type: Number,

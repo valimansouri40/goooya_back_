@@ -28,7 +28,8 @@ exports.SaveImg=CatchAsync(async (req,res,next)=>{
 
 exports.WorkSpacePost= CatchAsync(async (req, res,next)=>{
             
-            const switcharr= ['Registrationwork','Advocacy', 'ExpertofJustice', 'endofwork', 'lisense'];
+            const switcharr= ['mapdesign','Mapping','endofwork','Registrationwork','Advocacy', 'ExpertofJustice', 'endofwork', 'lisense','Executionandconstruction'];
+            ;
            let sampel;
             if(!switcharr.includes(req.body.Tab)){
                 if(!req.body.Image)throw( 'not exist img')

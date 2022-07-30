@@ -6,10 +6,10 @@ const AreaSchema=new mongoose.Schema({
         required:[true,'error area'],
         type:Number,
     },
-    // objid:{
-    //     type:mongoose.Schema.ObjectId,
-    //     ref:"city"
-    // },
+    objid:{
+        type:mongoose.Schema.ObjectId,
+        ref:"city"
+    },
    areaName :{
        required:[true,'error area'],
        type:String,
@@ -76,14 +76,14 @@ const AreaSchema=new mongoose.Schema({
 }
 })
 
-// AreaSchema.pre(/^find/, function(next) {
-//     this.populate({
-//       path: 'objid',
-//       select: 'name _id'
-//     });
+AreaSchema.pre(/^find/, function(next) {
+    this.populate({
+      path: 'objid',
+      select: 'name _id'
+    });
   
-//     next();
-//   });
+    next();
+  });
 
 const Area= mongoose.model('Area', AreaSchema);
 

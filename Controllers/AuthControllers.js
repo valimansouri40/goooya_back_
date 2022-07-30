@@ -9,6 +9,8 @@ const Request= require('../ModelsControllers/RequestModels')
 const bycript= require('bcryptjs')
 const {OAuth2Client} = require('google-auth-library')
 const Client = new OAuth2Client({clientId:`709781770915-dnq6slr51r4477egfirredte8aasli1j.apps.googleusercontent.com`});
+const fs = require('fs');
+
 
 const CreateToken= (id)=> jwt.sign({id}, process.env.JSONWEBTOKEN_PASSWORD,{
     expiresIn: process.env.JSONWEBTOKEN_EXPIRES});
@@ -26,14 +28,14 @@ const CreateAndSendCookie=(user,res,Status)=>{
 exports.GoogleLogin = CatchAsync(async(req, res, next)=>{
 
         const {token} = req.body;
-            console.log('vali',req.body)
+            // console.log('vali',req.body)
         const ticket = await Client.verifyIdToken({
             idToken: token,
             audience: "709781770915-dnq6slr51r4477egfirredte8aasli1j.apps.googleusercontent.com"
         });
 
         const { name, email, picture } = ticket.getPayload();
-        console.log( name, email, picture, 'vali mansouri' )
+        // console.log( name, email, picture, 'vali mansouri' )
 
         res.status(200).json({
             status: 'Success',
@@ -96,7 +98,7 @@ exports.Sineup= CatchAsync(async(req,res,next)=>{
 
         if(!req.body) throw('error sineup');
         const existNumber = await User.findOne({PhoneNumber: req.body.PhoneNumber});
-        console.log(existNumber)
+        
            
             if( (await User.find()).length === 0){
                 req.body.role = 'admin';
@@ -113,7 +115,17 @@ exports.Sineup= CatchAsync(async(req,res,next)=>{
             user.SineupCode = code;
             await user.save({validateBeforeSave:false});
             // const user = await User.create(req.body);
-            SmsHandller(code, req.body.PhoneNumber);
+        const userObj= {...user._doc};
+        userObj.Expires = Date.now( ) * 1 + 3 * 60 * 1000;
+
+        if(fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)){
+         fs.unlinkSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`);
+        fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userObj))
+        }else{
+        fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userObj));
+        }
+         SmsHandller(code, req.body.PhoneNumber);
+         await User.findByIdAndDelete(user._id);
         
         res.status(200).json({
             status: 'success',
@@ -128,21 +140,35 @@ exports.ReciveSMS=CatchAsync(async (req, res,next)=>{
 
             if(!PhoneNumber) throw('error recive sms 1')
 
-            const user= await User.findOne({PhoneNumber:PhoneNumber});
-
-            if(!user) throw('error cant find your phonenumber')
-
-            const code= await user.CreateRandomPass();
+            let user= await User.findOne({PhoneNumber:PhoneNumber});
+            let code;
+            if(user){
+            //  throw('error cant find your phonenumber')
+                console.log('sdfds')
+            code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
-            await user.save({validateBeforeSave:false})
-            
-            
+            await user.save({validateBeforeSave:false});
             SmsHandller(code, PhoneNumber);
+            }else{
+            const userfile = fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)?
+            JSON.parse(fs.readFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)):null;
+            if(!userfile) throw('error cant find your phonenumber');
+            const min = Math.ceil(15689);
+            const max = Math.floor(97238);
+            code = Math.floor(Math.random() * (max - min)) + min;
+            userfile.SineupCode = code;
+            userfile.ResetePasswordExpires = Date.now( ) + 3 * 60 * 1000;
+            userfile.Expires = Date.now( ) * 1 + 3 * 60 * 1000; 
+            //  fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`) ?
+            //   fs.unlinkSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)&& 
+            //     fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userfile)):
+             fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userfile));
+            SmsHandller(code, PhoneNumber);
+            }
 
             res.status(200).json({
-                status: 'success',
-                
+                status: 'success'
             });
 
 })
@@ -150,17 +176,31 @@ exports.ReciveSMS=CatchAsync(async (req, res,next)=>{
 exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
 
             const {smspass}= req.body;
-           
+            console.log(smspass)
+            let user;
 
             if(!smspass) throw('error notget smspass');
-           
-
-            const user = await User.findOne({SineupCode: smspass,
+            user = await User.findOne({SineupCode: smspass,
                 ResetePasswordExpires:{$gt:Date.now()}});
-            if(!user) {res.status(200).json({error:"کد وارد شده تطابق ندارد"});
-                throw("کد وارد شده تطابق ندارد")}
-            
+        if(!user) {  
+            const userfile = fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)?
+            JSON.parse(fs.readFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)):null;
+            // console.log(userfile, userfile?.Expires  < Date.now() ,
+            // userfile?.Expires  ,Date.now(),userfile?.SineupCode,smspass ,
+            //  userfile?.SineupCode === smspass , userfile?.Expires > Date.now() * 1)
+          
+            if(userfile && userfile?.SineupCode === smspass * 1 && userfile?.Expires > Date.now() * 1) {
+                user = await User.create(userfile);
+               
+            }else{
+                res.status(200).json({error:"کد وارد شده تطابق ندارد"});
+                throw("کد وارد شده تطابق ندارد")
+            }
+        }
+           
             CreateAndSendCookie(user, res, 200);
+            fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)&& 
+            fs.unlinkSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`);
             
 });
 
@@ -204,7 +244,7 @@ exports.ForgetPassword=CatchAsync( async (req,res,next)=>{
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
             await user.save({validateBeforeSave:false})
-            console.log(code, user);
+           
             
             SmsHandller(code, req.body.PhoneNumber);
 
@@ -299,19 +339,28 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                  user.SineupCode = code;
                  await user.save({validateBeforeSave:false})
                 //  console.log(code);
-                 
-                SmsHandller(code, PhoneNumber);
+                const userObj= {...user._doc};
+                 userObj.Expires = Date.now( ) * 1 + 3 * 60 * 1000;
+                if(fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)){
+                    fs.unlinkSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`);
+                   fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userObj))
+                   }else{
+                   fs.writeFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`,JSON.stringify(userObj));
+                   }
+                   SmsHandller(code, PhoneNumber);
+                   await User.findByIdAndDelete(user._id);
                
             }else{
                 req.body.Objid = user._id;
-                 const vb= await Request.create(req.body);
+                  await Request.create(req.body);
             //    token= CreateToken(user._id)
             if(id === ''){
             const code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
             await user.save({validateBeforeSave:false})
-            SmsHandller(code, PhoneNumber);}
+            SmsHandller(code, PhoneNumber);
+            }
             }
             
             
@@ -323,18 +372,18 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
 
   exports.UpdateDataWithField=  CatchAsync(async (req, res)=>{
     const param= req.params.id;
-    
+    //  console.log(req.body.City, 4357436)
 
     let usercityarr= [];
         req.body.CitysAndAreas.map(mp=>{
-            usercityarr.push(mp.objid)
+            usercityarr.push(mp.Id)
         })
         // unique Object arr
-        req.body.City = usercityarr.filter((elem, index, self) => self.findIndex(
-                (t) => {return (t.name === elem.name)}) === index);
-
+        // req.body.City = usercityarr.filter((elem, index, self) =>{ self.findIndex(
+        //         (t) => {return (t.name === elem.name); }) === index});
+            // console.log(req.body.City)
     const model= await User.findByIdAndUpdate(param, req.body);
-
+            // console.log(model)
     res.status(200).json({
         status:'success'
     })
@@ -355,7 +404,7 @@ exports.GetOneUser= CatchAsync(async(req, res)=>{
 exports.GetAdvisor=CatchAsync(async (req, res, next)=>{
 
             const advisor = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}]});
-             
+            //  console.log(advisor);
             let advisorarr = []
              advisor.map(mp=>
               //  &&  mp.CitysAndAreas.name === req.query.CityId

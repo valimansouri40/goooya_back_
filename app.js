@@ -15,28 +15,29 @@ const Reviwe= require('./RoutesControllers/Reviwe&rateRoutes');
 const Appointment= require('./RoutesControllers/AppointmentRoutes');
 const Mark = require('./RoutesControllers/MarkRoutes');
 const RateAd = require('./RoutesControllers/RateAdvisor');
-// require('./Utils/passport');
-// const fs = require('fs')
+// const fs = require('fs');
 
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true,limit: '50mb'}));
-
 app.use((req,res,next)=>{
-
-        console.log('middleware',)
-        
-        // fs.writeFileSync('Utils/vali.ts', 'valii mansouri')
-        
+  
+  console.log('middleware',)
+  // fs.readdirSync('public/img').forEach(file => {
+  //   fs.unlinkSync(`public/img/${file}`);
+  // });
+ 
     next();
 })
 
 app.use(cors({
-  origin:"http://localhost:3000" , 
+  origin: "*", 
+
     // process.env.CLIENT_URL, 
     credentials:true
 }))
 
+app.use(express.static('public/img'))
 app.use(helmet());
 
 

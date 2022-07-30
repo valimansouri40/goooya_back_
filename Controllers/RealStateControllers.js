@@ -47,7 +47,7 @@ const IdHandller = (lastId)=>{
     return bettween;
 }
 exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
-
+    // console.log(req.body.Image)
     const fn= await RealState.find({City: req.body.City, Area: req.body.Area}).sort('-RealStateNumber')
     
     if(fn.length > 0){
@@ -72,7 +72,7 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
   await Promise.all(
     images.map(async (file, i) => {
       const filename = `realstate-${req.body.RealStateNumber}-${i + 1}.jpeg`;
-        
+        // console.log(i)
         const fl= file.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
            
@@ -84,7 +84,10 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
 
           
       })
-      .catch(err => console.log(`downisze issue ${err}`))
+      .catch(err =>{
+          console.log(`downisze issue ${err}`)
+        throw('can not image save')
+    })
 
       req.body.Image.push(filename);
     }))
@@ -97,6 +100,9 @@ exports.PostRealState= CatchAsync(async (req, res, next)=>{
    
     if(req.user.role === 'dealer' ){
         req.body.NoneId= 1234
+    }else{
+        delete req.body.NoneId
+
     }
     await RealState.create(req.body);
         res.status(200).json({
@@ -158,8 +164,7 @@ exports.WriteArea=CatchAsync( async(req, res, next)=>{
 exports.GetAllCity=CatchAsync( async( req, res)=>{
 
         const city= await City.find();
-        // await City.deleteMany();
-        // await Area.deleteMany();
+       
         console.log('vali', Areas.length)
         if(city.length === 0){
             await Promise.all(
@@ -168,6 +173,8 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
             }))
          
         }
+        //  await City.deleteMany();
+        // await Area.deleteMany();
         res.status(200).json({
             status: 'success',
             data: city
@@ -181,15 +188,26 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
     const ae = await Area.find();
     if(ae.length === 0){
         console.log("create")
+        let CId = {};
         await Promise.all(
+            Citys.map(async(mp,i)=>{
+                const obj = await City.findOne({Id: mp.CityId, name: mp.name});
+                CId[`${mp.id}`] = obj._id
+                // console.log(await City.findById(CId[`${mp.id}`]))
+               })
+        )
+        console.log(CId)
+        await Promise.all(
+         
             Areas.map(async(mp,i)=>{
                 //    if(mp.CityId !== 621){ 
-                    //    let CId = await City.find({Id: mp.CityId});
+                     
                     let AreaId = `${100 + i}` + mp.CityId ;
-                    await Area.create({Id: AreaId, ...mp });
-                    console.log(AreaId, Number(AreaId), mp.CityId);}
+                     await Area.create({Id: AreaId,objid: CId[`${mp.CityId}`], ...mp });
+                    console.log(AreaId, Number(AreaId), CId[`${mp.CityId}`]);}
                     
-                    ));
+                    )
+                    );
         console.log(ae.length, Areas.length)
                 }
     res.status(200).json({

@@ -20,13 +20,17 @@ exports.GetOneData= Model => CatchAsync(async (req, res, next)=>{
     const param= req.params.id;
     
     const model= await Model.findById(param);
-        let arrimg=[]
-                model.Image.map(im=>{
-                    // realstate-1648546291143-1.jpeg
-                    arrimg.push(fs.existsSync(`public/img/${im}`)?fs.readFileSync(`public/img/${im}`,'base64'):null)
-        })
         
-        model.Image= arrimg;
+        // let arrimg=[]
+        //         model.Image.map(im=>{
+        //             // realstate-1648546291143-1.jpeg
+        //             // arrimg.push(fs.existsSync(`public/img/${im}`)?fs.readFileSync(`public/img/${im}`,'base64'):null)
+        //             arrimg.push(window.location.protocol + "//" + window.location.host + '/' + im)
+        //             console.log(window.location.protocol + "//" + window.location.host + '/' + im)
+        //         })
+        // console.log(model)
+        // model.Image= arrimg;
+
     res.status(201).json({
         status:'success',
         data: model
@@ -72,8 +76,8 @@ exports.GetAllData= Model => CatchAsync(async (req, res,next)=>{
 
 
         await Promise.all(model.map(async(mp, i)=>{
-            let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
-            model[i].Image = [imageCu];
+            // let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
+            // model[i].Image = [imageCu];
             if(useerid){
                 const Markfinding= await Mark.findOne({RealStateId: mp._id, UserId: useerid });
              if(Markfinding){
@@ -112,6 +116,7 @@ exports.CompressImageProfile = CatchAsync(async (req, res, next)=>{
 exports.UpdateData= Model => CatchAsync(async (req, res)=>{
     const param= req.params.id;
    
+    req.body.NoneId= null
     
     
     const model= await Model.findByIdAndUpdate(param, req.body);

@@ -28,7 +28,7 @@ class ApiFeacher{
         this.data= this.data.find().skip(skip).limit(limit);
         return this;
     }
-    sort(){
+    sort(){ 
        
             this.data= this.data.find().sort('-createAt')
         return this;

@@ -22,9 +22,9 @@ exports.GetAllRealStateAndMark=  CatchAsync(async (req, res,next)=>{
        
         
     await Promise.all(  model.map(async(mp, i)=>{
-        let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
+        // let imageCu = fs.existsSync(`public/img/${mp.Image[0]}`)?fs.readFileSync(`public/img/${mp.Image[0]}`,'base64'):null
             
-            model[i].Image = [imageCu];
+        //     model[i].Image = [imageCu];
             const Markfinding= await Mark.findOne({RealStateId: mp._id, UserId: req.user._id });
              if(Markfinding){
                  model[i].Mark  = true;
@@ -57,12 +57,12 @@ exports.GetAllMyMark=CatchAsync(async(req, res)=>{
    let mark= await querymark.data;
     
 //    console.log(mark[0])
-    mark.map((mp,i)=>{
-        let imageCu = fs.existsSync(`public/img/${mp.RealStateId.Image[0]}`)?fs.readFileSync(`public/img/${mp.RealStateId.Image[0]}`,'base64'):''
+    // mark.map((mp,i)=>{
+    //     let imageCu = fs.existsSync(`public/img/${mp.RealStateId.Image[0]}`)?fs.readFileSync(`public/img/${mp.RealStateId.Image[0]}`,'base64'):''
         
-       mark[i].RealStateId.Image = [imageCu];
+    //    mark[i].RealStateId.Image = [imageCu];
 
-    }) 
+    // }) 
     const ln =  new ApiFeacher( Mark.find({ UserId: userid }), req.query).filterandlength()
     const lengthall=( await ln.data).length;
         

@@ -147,10 +147,10 @@ exports.WriteCity=CatchAsync(async (req,res,next)=>{
 exports.WriteArea=CatchAsync( async(req, res, next)=>{
 
     const cityId= req.body.CityId;
-    const findcity= await City.findOne({id:cityId});
+    const findcity= await City.findOne({name:cityId});
 
     req.body.objid= findcity._id;
-
+    req.body.CityId= findcity.id;
     const filter= await Area.find({...req.body});
     if(filter.length  < 1){
      await Area.create(req.body);
@@ -173,7 +173,7 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
             }))
          
         }
-        //  await City.deleteMany();
+        // await City.deleteMany();
         // await Area.deleteMany();
         res.status(200).json({
             status: 'success',
@@ -208,8 +208,9 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
                     
                     )
                     );
-        console.log(ae.length, Areas.length)
                 }
+                // await Area.deleteMany();
+                // console.log(ae.length, Areas.length)
     res.status(200).json({
         status: 'success',
         data: city
@@ -217,10 +218,18 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
 });
 
 exports.FindCity=CatchAsync(async(req, res)=>{
-    const id= req.query.city;
+    let id= req.query.city;
     
-    const city= await City.find({name:id});
-
+    if(req.query.cityName){
+        id = new RegExp(req.query.cityName,'i')
+    }
+    let city= await City.find({name:id});
+    
+    if(req.query.cityName){
+    city = city.map(mp=>{
+        return {id: mp.id, _id: mp._id, name:mp.name}
+    })
+        }
     res.status(200).json({
         status: 'success',
         data: city
@@ -238,14 +247,19 @@ exports.FilterCity=CatchAsync(async(req, res)=>{
 })
 
 exports.FindArea=CatchAsync(async(req, res)=>{
-    const id= req.query.area;
+    let query= req.query;
+    let AreaDT;
+    if(query.area){
     
-    const city= await Area.find({areaName: id});
-    
+       AreaDT= await Area.find({areaName: query.area});
+    }else if(query.areaName){
+        const regex = new RegExp(query.areaName, 'i')
+        AreaDT = await Area.find({areaName: regex }).skip(1).limit(15);
+    }
 
     res.status(200).json({
         status: 'success',
-        data: city
+        data: AreaDT
     })
 })
 
@@ -258,3 +272,16 @@ exports.FilterArea=CatchAsync(async(req, res)=>{
         
     })
 })
+
+
+// exports.FindCityByName=CatchAsync(async(req, res)=>{
+//     const id= req.query.name;
+    
+//     const city= await City.find({name:id});
+
+//     res.status(200).json({
+//         status: 'success',
+//         data: city
+//     })
+        
+// })

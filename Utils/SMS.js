@@ -8,7 +8,8 @@ const SmsHandller=(randombyte, PhoneNumber)=>{
     // console.log( randombyte, PhoneNumber)
 
     SmsSend.Send({
-        message: " :  کد تایید هویت شما در گویا " + randombyte,
+        message: `کد عبور شما: ${randombyte}
+        با تشکر، گویا`  ,
         sender: "1000596446",
         receptor: PhoneNumber
     },

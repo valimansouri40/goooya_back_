@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  # database service
+  database:
+    hostname: monogodb
+    image: mongo:4.4.15
+    restart: always
+    volumes:
+      - amlakdatabase:/data/db
+#      - ./db/data:/data/db
+#      - ./db/dump:/dump
+#    ports:
+#      - 27017:27017
+    networks: 
+      goooya_network_server:
+        aliases: 
+          - "database"
+
+  # node API service
+  goooyaamlak:
+    hostname: goooyaamlak
+    build: .
+    restart: always
+    environment:
+      NODE_ENV: production
+      APP_BASE_URL: https://goooya.ir:3000
+      PORT: 8000
+      JSONWEBTOKEN_PASSWORD: asadolahi-09125217097-real-state
+      JSONWEBTOKEN_EXPIRES: 90d
+      JSONWEBTOKEN_COOKIE_EXPIRES: 90
+      MONGODB_URI: mongodb://database:27017/realstateadvisor
+    ports:
+      - 2053:8000
+    depends_on:
+      - database
+    volumes:
+      - public:/usr/src/app/public
+    networks: 
+      goooya_network_server:
+        aliases: 
+          - "goooyaamlak"
+
+volumes:
+   amlakdatabase:
+   public:
+
+networks:
+   goooya_network_server:
+     driver: bridge
+
+
+

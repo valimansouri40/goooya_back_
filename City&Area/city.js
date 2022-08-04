@@ -1,14 +1,14 @@
 
 exports.Citys=[{
 "name":"دماوند",
-"id":621,
+"id":"622",
 "ostan":"تهران",
 "shahrestan":"دماوند",
 "bakhsh":"مرکزی",
 "weather" : "کوهستانی"
 },{
 "name":"رودهن",
-"id":700,
+"id":"700",
 "ostan":"تهران",
 "shahrestan":"دماوند",
 "bakhsh":"رودهن",
@@ -16,26 +16,58 @@ exports.Citys=[{
 },
 {
 "name":"آبعلی",
-"id":15,
+"id":"15",
 "ostan":"تهران",
 "shahrestan":"دماوند",
 "bakhsh":"رودهن",
-"weather" : "کوهستانی",
+"weather" : "کوهستانی"
 },
 {
 "name":"آبسرد",
-"id":13,
+"id":"13",
 "ostan":"تهران",
 "shahrestan":"دماوند",
+"bakhsh":"مرکزی",
+"weather" : "کوهستانی"
+},{
+"name":"کیلان",
+"id":"1209",
+"ostan":"تهران",
+"shahrestan":"دماوند",
+"bakhsh":"مرکزی",
+"weather" : "کوهستانی"
+},{
+"name":"فیروزکوه",
+"id":"1039",
+"ostan":"تهران",
+"shahrestan":"فیروزکوه",
 "bakhsh":"مرکزی",
 "weather" : "کوهستانی"
 },
-
 {
-"name":"کیلان",
-"id":1209,
+    
+"name": "بومهن",
+"id": "301",
 "ostan":"تهران",
 "shahrestan":"دماوند",
-"bakhsh":"مرکزی",
+"bakhsh":"بومهن",
 "weather" : "کوهستانی"
-}]
+},
+ {
+  
+ "name": "پردیس",
+ "id": "340",
+"ostan":"تهران",
+"shahrestan":"پردیس",
+"bakhsh":"مرکزی",
+"weather" : "کوهستانی",
+} ,{   
+"name": "ارجمند",
+"id": "68",
+"ostan":"تهران",
+"shahrestan":"فیروزکوه",
+"bakhsh":"ارجمند",
+"weather" : "کوهستانی"
+}
+]
+

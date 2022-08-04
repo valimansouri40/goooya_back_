@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  # mongodb service
+  mognodb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mognodb:/data/db
+
+  # node API service
+  goooyagmlak:
+    build:
+      target: server
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      APP_BASE_URL: http://localhost:3000
+      PORT: 8000
+      JSONWEBTOKEN_PASSWORD: asadolahi-09125217097-real-state
+      JSONWEBTOKEN_EXPIRES: 90d
+      JSONWEBTOKEN_COOKIE_EXPIRES: 90
+      MONGODB_URI: mongodb://mognodb:27017/
+    ports:
+      - 2053:8000
+    depends_on:
+      - mognodb
+    volumes:
+      - public:/usr/src/app/public
+
+volumes:
+  mognodb:
+  public:

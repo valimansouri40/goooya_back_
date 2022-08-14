@@ -16,13 +16,20 @@ const CreateToken= (id)=> jwt.sign({id}, process.env.JSONWEBTOKEN_PASSWORD,{
     expiresIn: process.env.JSONWEBTOKEN_EXPIRES});
 
 
-const CreateAndSendCookie=(user,res,Status)=>{
+const CreateAndSendCookie=(user,res,Status,resetpassword)=>{
         const token= CreateToken(user._id);
-        
+        if(resetpassword){
+        res.status(Status).json({
+            status: 'success',
+            data: token,
+            resetpassword: resetpassword
+        })
+    }else{
         res.status(Status).json({
             status: 'success',
             data: token
         })
+    }
 }
 
 exports.GoogleLogin = CatchAsync(async(req, res, next)=>{
@@ -178,10 +185,16 @@ exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
             const {smspass}= req.body;
             console.log(smspass)
             let user;
-
+            let ResetPasswords = false;
             if(!smspass) throw('error notget smspass');
             user = await User.findOne({SineupCode: smspass,
                 ResetePasswordExpires:{$gt:Date.now()}});
+
+            const existUser=await User.findOne({PhoneNumber:req.body.PhoneNumber})
+                if(existUser){
+                    ResetPasswords = true;
+                }
+                
         if(!user) {  
             const userfile = fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)?
             JSON.parse(fs.readFileSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)):null;
@@ -198,7 +211,7 @@ exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
             }
         }
            
-            CreateAndSendCookie(user, res, 200);
+            CreateAndSendCookie(user, res, 200,  ResetPasswords);
             fs.existsSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`)&& 
             fs.unlinkSync(`public/UnAuthenticatedUser/${req.body.PhoneNumber}.json`);
             
@@ -404,7 +417,8 @@ exports.GetOneUser= CatchAsync(async(req, res)=>{
 exports.GetAdvisor=CatchAsync(async (req, res, next)=>{
 
             const advisor = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}]});
-            //  console.log(advisor);
+            //   console.log(advisor);
+
             let advisorarr = []
              advisor.map(mp=>
               //  &&  mp.CitysAndAreas.name === req.query.CityId
@@ -413,6 +427,7 @@ exports.GetAdvisor=CatchAsync(async (req, res, next)=>{
                 mi.areaName === req.query.area? advisorarr.push(mp):null
             })
             ) 
+            // console.log(advisorarr, req.query.area)
         //   const advisorareafilter = advisorarea.filter(ln=> ln.length > 0 );
             
             res.status(200).json({

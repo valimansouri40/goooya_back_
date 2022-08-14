@@ -9,7 +9,7 @@ const RealStateSchema= mongoose.Schema({
 Area: {
     required:[true,'error str'],
         type:String,
-        min:[3,'error length str']
+        min:[2,'error length str']
 },
 Assansor: {
         default:false,
@@ -65,7 +65,13 @@ HeaterSystem: {
 },
 Image: {
     required:[true,'error img'],
-    type:Array
+    type:Array,
+    validate:{
+        validator: function(e){
+            return e.length > 0;
+        },
+        message:'not valid'
+    }
 
 },
 Immediatly: {
@@ -221,6 +227,10 @@ Mark:{
     type: Boolean,
     default: false
 },
+AreaObjId:{
+    type:mongoose.Schema.ObjectId,
+        ref:'Area',
+},
 NoneId:{
     type: Number
 },
@@ -233,7 +243,13 @@ createAt:{
 // RealStateSchema.pre('save', async function(next){
 //      this.RealStateNumber = this
 // })
-
+RealStateSchema.pre('find', async function(next){
+    this.populate({
+        path: "AreaObjId",
+        select: "areatype areaName _id"
+    })
+    next();
+})
 RealStateSchema.pre('findOne',async function(next){
         this.populate({
             path:'AdvisorId',
@@ -243,7 +259,7 @@ RealStateSchema.pre('findOne',async function(next){
             path:'RegistrarId',
             select: 'FristName LastName  PhoneNumber _id role '
         });
-
+       
         next();
 })
 

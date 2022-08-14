@@ -4,41 +4,46 @@ const { GetAllData, GetOneData, UpdateData } = require("./FactoryControllers");
 const City = require('../ModelsControllers/CityModels');
 const Area = require('../ModelsControllers/AreaModels');
 const sharp= require('sharp');
-const multer= require('multer');
+// const multer= require('multer');
 const fs= require('fs');
 const Mark = require('../ModelsControllers/MarkModels');
 const Appointment = require('../ModelsControllers/AppointmentModels');
 const Rate = require('../ModelsControllers/RateModels');
 const { Citys } = require('../City&Area/city');
 const { Areas } = require('../City&Area/Areas');
+const { find } = require('../ModelsControllers/RealStateModels');
 
-const multerStorage = multer.memoryStorage();
+// const multerStorage = multer.memoryStorage();
 
-const multerFilter = (req, file, cb) => {
-  if (req.body.Image) {
-    cb(null, true);}
+// const multerFilter = (req, file, cb) => {
+//   if (req.body.Image) {
+//     cb(null, true);}
  
-};
+// };
 
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
+// const upload = multer({
+//   storage: multerStorage,
+//   fileFilter: multerFilter
+// });
 
-exports.uploadTourImages = upload.fields([
-  { name: 'Image', maxCount: 5 }
-]);
+// exports.uploadTourImages = upload.fields([
+//   { name: 'Image', maxCount: 5 }
+// ]);
 
 exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
-        if(!req.body.Image) next();
+        // console.log(req.body.ListImagesDeleted.length === 0 )
+        if(req.body.ListImagesDeleted.length !== 0 ){ 
+        console.log("ListImagesDeleted")
         const paramm= req.params.id;
 
         const realstate= await RealState.findById(paramm);
             
         realstate.Image.forEach(path => fs.existsSync(`public/img/${path}`) 
         && fs.unlinkSync(`public/img/${path}`));
-
         next();
+        }else{
+        next();
+    }
 })
 
 const IdHandller = (lastId)=>{
@@ -57,22 +62,24 @@ exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
     req.body.RealStateNumber = req.body.cityandareaid;
     
 }
+    // console.log(await RealState.find({RealStateNumber:req.body.RealStateNumber}))
    next();
 });
 
 exports.ImageHandller=CatchAsync(async (req,res,next)=>{
-    
-    if(req.body.Image ){
-        
+    // console.log(req.body.Image[0],)
+    // if(req.body.Image[0].endsWith(".jpeg")) {delete req.body.Image; console.log("delete")}
+    if(req.body.Image && !req.body.Image[0].endsWith(".jpeg")){
+        console.log("vali mansouri")
         const images= req.body.Image;
             
         req.body.Image = [];
-
-      
+        
+    //   console.log(req.body.RealStateNumber);
   await Promise.all(
     images.map(async (file, i) => {
       const filename = `realstate-${req.body.RealStateNumber}-${i + 1}.jpeg`;
-        // console.log(i)
+        // console.log(file)
         const fl= file.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
            
@@ -92,11 +99,12 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
       req.body.Image.push(filename);
     }))
         }
-    
+        
     next();
 })
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
+    console.log('ugytf','jfiuhsdui', req.body.Image, req.body.RealStateNumber)
    
     if(req.user.role === 'dealer' ){
         req.body.NoneId= 1234
@@ -173,8 +181,7 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
             }))
          
         }
-        // await City.deleteMany();
-        // await Area.deleteMany();
+       
         res.status(200).json({
             status: 'success',
             data: city
@@ -209,6 +216,8 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
                     )
                     );
                 }
+                //  await City.deleteMany();
+                //  await Area.deleteMany();
                 // await Area.deleteMany();
                 // console.log(ae.length, Areas.length)
     res.status(200).json({

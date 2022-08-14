@@ -3,7 +3,7 @@
    {
 "CityId": "622",
 "areaName" :"فرامه",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.71258,
 "latitude" :52.06507,
 "locationDescription":"بافت میانی شهر",
@@ -19,7 +19,7 @@
  {
 "CityId": "622",  
 "areaName" :"چالکا",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.72214,
 "latitude" :52.07501,
 "locationDescription":"بافت میانی شهر",
@@ -35,7 +35,7 @@
 {
 "CityId": "622",
 "areaName" :"درویش",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.72608,
 "latitude" :52.06640,
 "locationDescription":"بافت میانی شهر",
@@ -52,7 +52,7 @@
 {
 "CityId": "622",
 "areaName" :"قاضی",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.719278,
 "latitude" :52.07006,
 "locationDescription":"بافت میانی شهر",
@@ -69,7 +69,7 @@
 {
 "CityId": "622",
 "areaName" :"روح افزا",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.72902 ,
 "latitude" :52.07195,
 "locationDescription":"محلات شمالی",
@@ -86,7 +86,7 @@
 {
 "CityId":"622",
 "areaName" :"اوره",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.73946 ,
 "latitude" :52.06648,
 "locationDescription":"محلات شمالی",
@@ -103,7 +103,7 @@
 {
 "CityId":"622",
 "areaName" :"دشتبان",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.74444 ,
 "latitude" :52.06371,
 "locationDescription":"محلات شمالی",
@@ -121,7 +121,7 @@
 {
 "CityId":"622",
 "areaName" :"دشتمزار",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.74334 ,
 "latitude" :52.07348,
 "locationDescription":"محلات شمالی",
@@ -139,7 +139,7 @@
 {
 "CityId":"622",
 "areaName" :"احمدآباد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.73531 ,
 "latitude" :52.05966,
 "locationDescription":"محلات شمالی",
@@ -156,7 +156,7 @@
 {
 "CityId":"622",
 "areaName" :"چشمه اعلا",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.74540,
 "latitude" :52.05417,
 "locationDescription":"محلات شمالی ",
@@ -174,7 +174,7 @@
 {
 "CityId":"622",
 "areaName" :"مشاء",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.76691,
 "latitude" :52.02787,
 "locationDescription":"محلات شمالی",
@@ -191,7 +191,7 @@
 {
 "CityId":"622",
 "areaName" :"دشتک",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :"",
 "latitude" :"",
 "locationDescription":"محلات شمالی",
@@ -208,7 +208,7 @@
 {
 "CityId":"622",
 "areaName" :"منظریه",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :"",
 "latitude" :"",
 "locationDescription":"محلات شمالی",
@@ -225,7 +225,7 @@
 {
 "CityId":"622",
 "areaName" :"امامزاده هاشم",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.77956,
 "latitude" :52.03907,
 "locationDescription":"محلات شمالی",
@@ -242,7 +242,7 @@
 {
 "CityId":"15",
 "areaName" :"آبعلی",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.76760,
 "latitude" :51.96671,
 "locationDescription":"",
@@ -259,7 +259,7 @@
 {
 "CityId":"700",
 "areaName" :"تجرک",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.76167,
 "latitude" :51.92155,
 "locationDescription":"مجاورت بام رودهن",
@@ -276,7 +276,7 @@
 {
 "CityId":"700",
 "areaName" :"وسکاره",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.76698,
 "latitude" :51.89568,
 "locationDescription":"خیابان سجادیان رودهن",
@@ -294,7 +294,7 @@
 {
 "CityId":"700",
 "areaName" :"آردینه",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.79472,
 "latitude" :51.88545,
 "locationDescription":"امتداد خیابان سجادیان رودهن",
@@ -311,7 +311,7 @@
 {
 "CityId":"700",
 "areaName" :"جورد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.80739,
 "latitude" :51.86959,
 "locationDescription":"",
@@ -329,7 +329,7 @@
 {
 "CityId":"700",
 "areaName" :"رودهن",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.73061,
 "latitude" :51.90757,
 "locationDescription":"مجاورت جاده هراز",
@@ -346,7 +346,7 @@
 {
 "CityId":"700",
 "areaName" :"چناران",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.69747,
 "latitude" :51.96528,
 "locationDescription":"توابع رودهن",
@@ -364,7 +364,7 @@
 {
 "CityId":"700",
 "areaName" :"گلاهک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.71893,
 "latitude" :51.94903,
 "locationDescription":"توابع رودهن",
@@ -383,7 +383,7 @@
 {
 "CityId":"622",
 "areaName" :"بنیاد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.71792,
 "latitude" :52.05417,
 "locationDescription":"",
@@ -400,7 +400,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک آویشن",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.73183,
 "latitude" :52.04586,
 "locationDescription":"در مجاورت بنیاد",
@@ -417,7 +417,7 @@
 {
 "CityId":"622",
 "areaName" :"جیلارد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.69008,
 "latitude" :52.04051,
 "locationDescription":"محلات جنوبی",
@@ -434,7 +434,7 @@
 {
 "CityId":"622",
 "areaName" :"ولیران",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.69782 ,
 "latitude" :52.05912,
 "locationDescription":"",
@@ -451,7 +451,7 @@
 {
 "CityId":"622",
 "areaName" :"شلمبه",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.68563 ,
 "latitude" :52.05236,
 "locationDescription":"محلات جنوبی",
@@ -467,7 +467,7 @@
 {
 "CityId":"622",
 "areaName" :"کالدشت ",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -486,7 +486,7 @@
 {
 "CityId":"622",
 "areaName" :"خمینی آباد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.71936 ,
 "latitude" :52.07434,
 "locationDescription":"خیابان منتهی به چنارشرق",
@@ -503,7 +503,7 @@
  {
 "CityId":"622",
 "areaName" :"چنارشرق",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.69806 ,
 "latitude" :52.10991,
 "locationDescription":"محلات شرقی",
@@ -520,7 +520,7 @@
 {
 "CityId":"622",
 "areaName" :"اشندر",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.70139 ,
 "latitude" :52.13383,
 "locationDescription":"کوه اشندر",
@@ -538,7 +538,7 @@
 {
 "CityId":"622",
 "areaName" :"گلگنگک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.69892,
 "latitude" :52.12447,
 "locationDescription":"",
@@ -556,7 +556,7 @@
 {
 "CityId":"622",
 "areaName" :"حصار بالا",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.67605,
 "latitude" :52.03863,
 "locationDescription":"محلات جنوبی",
@@ -573,7 +573,7 @@
 {
 "CityId":"622",
 "areaName" :"حصار پایین",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.66924 ,
 "latitude" :52.03260,
 "locationDescription":"محلات جنوبی",
@@ -590,7 +590,7 @@
 {
 "CityId":"622",
 "areaName" :"اصطلک بالا",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.68245 ,
 "latitude" :52.06654,
 "locationDescription":"",
@@ -607,7 +607,7 @@
 {
 "CityId":"622",
 "areaName" :"اصطلک پایین",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.67994 ,
 "latitude" :52.07547,
 "locationDescription":"",
@@ -624,7 +624,7 @@
 {
 "CityId":"622",
 "areaName" :"گیلاوند",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : 35.68396,
 "latitude" :52.03691,
 "locationDescription":"جاده فیروزکوه",
@@ -641,7 +641,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک شاهد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -658,7 +658,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک جهاد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -675,7 +675,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک ولیعصر",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -691,7 +691,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک توحید",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -707,7 +707,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک سپاه",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -724,7 +724,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک محک",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -740,7 +740,7 @@
 {
 "CityId":"622",
 "areaName" :"شهرک محک",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -757,7 +757,7 @@
 {
 "CityId":"622",
 "areaName" :"دمادشت",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -774,7 +774,7 @@
 {
 "CityId":"622",
 "areaName" :"مسکن مهر",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -790,7 +790,7 @@
 {
 "CityId":"622",
 "areaName" :"جیلارد نو",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.68128 ,
 "latitude" :52.01492,
 "locationDescription":"محلات جنوبی",
@@ -808,7 +808,7 @@
 {
 "CityId":"622",
 "areaName" :"سنگ پل",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.70771 ,
 "latitude" :52.06431,
 "locationDescription":"محلات میانی",
@@ -826,7 +826,7 @@
 {
 "CityId":"622",
 "areaName" :"مراء",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.65145 ,
 "latitude" :52.01436,
 "locationDescription":"محلات جنوبی",
@@ -843,7 +843,7 @@
 {
 "CityId":"622",
 "areaName" :"تمسیان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.62309 ,
 "latitude" :51.94554,
 "locationDescription":"",
@@ -860,7 +860,7 @@
 {
 "CityId":"622",
 "areaName" :"هاشمک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.61582,
 "latitude" :52.06384,
 "locationDescription":"توابع بخش مرکزی",
@@ -877,7 +877,7 @@
 {
 "CityId":"13",
 "areaName" :"آبسرد",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.62373 ,
 "latitude" :52.16034,
 "locationDescription":"",
@@ -893,7 +893,7 @@
 {
 "CityId":"622",
 "areaName" :"قرا",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -909,7 +909,7 @@
 {
 "CityId":"622",
 "areaName" :"عینی آباد",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -926,7 +926,7 @@
 {
 "CityId":"622",
 "areaName" :"بولان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : "",
 "latitude" :"",
 "locationDescription":"جاده فیروزکوه",
@@ -943,7 +943,7 @@
 {
 "CityId":"1209",
 "areaName" :"وادان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.59879,
 "latitude" :52.14483,
 "locationDescription":"محلات جنوب شرقی",
@@ -960,7 +960,7 @@
 {
 "CityId":"13",
 "areaName" :"زان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.60452 ,
 "latitude" :52.20707,
 "locationDescription":"توابع بخش مرکزی",
@@ -977,7 +977,7 @@
 {
 "CityId":"622",
 "areaName" :"آیینه ورزان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.66291,
 "latitude" :52.20422,
 "locationDescription":"توابع بخش مرکزی",
@@ -995,7 +995,7 @@
 {
 "CityId":"622",
 "areaName" :"جابان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.64897,
 "latitude" :52.25178,
 "locationDescription":"توابع بخش مرکزی",
@@ -1012,7 +1012,7 @@
 {
 "CityId":"13",
 "areaName" :"سرخه ده",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.59854,
 "latitude" :52.27297,
 "locationDescription":"توابع بخش مرکزی",
@@ -1030,7 +1030,7 @@
 {
 "CityId":"13",
 "areaName" :"اوچونک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.56819 ,
 "latitude" :52.23628,
 "locationDescription":"توابع بخش مرکزی",
@@ -1046,7 +1046,7 @@
 {
 "CityId":"13",
 "areaName" :"گرمابسرد",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.46803,
 "latitude" :52.35293,
 "locationDescription":"توابع بخش مرکزی",
@@ -1062,7 +1062,7 @@
 {
 "CityId":"622",
 "areaName" :"سقز دره",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.51611,
 "latitude" :52.39741,
 "locationDescription":"توابع بخش مرکزی",
@@ -1079,7 +1079,7 @@
 {
 "CityId":"622",
 "areaName" :"قلفک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.57649,
 "latitude" :52.36341,
 "locationDescription":"توابع بخش مرکزی",
@@ -1096,7 +1096,7 @@
 {
 "CityId":"622",
 "areaName" :"شاه بلاغی",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.59716,
 "latitude" :52.36353,
 "locationDescription":"توابع بخش مرکزی",
@@ -1112,7 +1112,7 @@
 {
 "CityId":"622",
 "areaName" :"سیدآباد",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.64071,
 "latitude" :52.37155,
 "locationDescription":"توابع بخش مرکزی",
@@ -1129,7 +1129,7 @@
 {
 "CityId":"622",
 "areaName" :"آرو",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.66973,
 "latitude" :52.40321,
 "locationDescription":"توابع بخش مرکزی",
@@ -1146,7 +1146,7 @@
 {
 "CityId":"622",
 "areaName" :"کلاک مشهد",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35061763,
 "latitude" :52.42644,
 "locationDescription":"توابع بخش مرکزی",
@@ -1162,7 +1162,7 @@
 {
 "CityId":"622",
 "areaName" :"رودافشان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.64098,
 "latitude" :52.50227,
 "locationDescription":"توابع بخش مرکزی",
@@ -1179,7 +1179,7 @@
 {
 "CityId":"622",
 "areaName" :"خسروان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.65783,
 "latitude" :52.22819,
 "locationDescription":"",
@@ -1197,7 +1197,7 @@
 {
 "CityId":"622",
 "areaName" :"مقانک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" : 35.55463,
 "latitude" :52.26041,
 "locationDescription":"",
@@ -1214,7 +1214,7 @@
 {
 "CityId":"1209",
 "areaName" :"کوهان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.58110,
 "latitude" :52.14369,
 "locationDescription":"",
@@ -1231,7 +1231,7 @@
 {
 "CityId":"1209",
 "areaName" :"کیلان",
-"area type" : "محله",
+"areatype" : "محله",
 "longtitude" :35.54819,
 "latitude" :52.16566,
 "locationDescription":"",
@@ -1249,7 +1249,7 @@
 {
 "CityId":"1209",
 "areaName" :"زیارت",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.56707,
 "latitude" :52.18484,
 "locationDescription":"",
@@ -1266,7 +1266,7 @@
 {
 "CityId":"1209",
 "areaName" :"لومان",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.58998,
 "latitude" :52.18347,
 "locationDescription":"",
@@ -1284,7 +1284,7 @@
 {
 "CityId":"1209",
 "areaName" :"بیدک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.59918,
 "latitude" :52.15133,
 "locationDescription":"",
@@ -1301,7 +1301,7 @@
 {
 "CityId":"1209",
 "areaName" :"اهران",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.60778,
 "latitude" :52.14736,
 "locationDescription":"",
@@ -1318,7 +1318,7 @@
 {
 "CityId":"1209",
 "areaName" :"ساران",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.51239,
 "latitude" :52.16881,
 "locationDescription":"",
@@ -1334,7 +1334,7 @@
 {
 "CityId":"1209",
 "areaName" :"مرانک",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.68233,
 "latitude" :52.03201,
 "locationDescription":"",
@@ -1352,7 +1352,7 @@
 {
 "CityId":"700",
 "areaName" :"مهرآباد",
-"area type" : "روستا",
+"areatype" : "روستا",
 "longtitude" :35.70254,
 "latitude" :51.91622,
 "locationDescription":"توابع بخش رودهن",

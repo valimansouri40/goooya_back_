@@ -17,6 +17,16 @@ const SmsHandller=(randombyte, PhoneNumber)=>{
             console.log(response, randombyte);
             // console.log(status)
     });
+
+    // SmsSend.VerifyLookup({
+    //     receptor: PhoneNumber,
+    //     token: "2331313",
+    //     template: "registerverify",
+    //     type:'sms'
+    // }, function(response, status) {
+    //     console.log(response);
+    //     console.log(status);
+    // });
 }
 
 module.exports=SmsHandller;

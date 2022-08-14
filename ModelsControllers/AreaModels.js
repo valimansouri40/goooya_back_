@@ -10,6 +10,10 @@ const AreaSchema=new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:"city"
     },
+    areatype:{
+        type:String,
+        max:[25, 'error length']
+    },
    areaName :{
        required:[true,'error area'],
        type:String,

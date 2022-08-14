@@ -118,9 +118,9 @@ exports.UpdateData= Model => CatchAsync(async (req, res)=>{
    
     req.body.NoneId= null
     
-    
+    console.log(req.body.Image)
     const model= await Model.findByIdAndUpdate(param, req.body);
-    
+    console.log(model.Image)
     res.status(200).json({
         status:'success',
         data: model

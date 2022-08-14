@@ -41,7 +41,7 @@ const router = express.Router();
     router.route('/deletecity')
     .post(State.FilterCity);
 
-    router.use(Auth.ResterictTo('admin','employee', 'advisor'));
+    router.use(Auth.ResterictTo('admin','employee'));
 
 
 

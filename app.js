@@ -15,7 +15,7 @@ const Reviwe= require('./RoutesControllers/Reviwe&rateRoutes');
 const Appointment= require('./RoutesControllers/AppointmentRoutes');
 const Mark = require('./RoutesControllers/MarkRoutes');
 const RateAd = require('./RoutesControllers/RateAdvisor');
-// const fs = require('fs');
+ const fs = require('fs');
 
 
 app.use(express.json({limit: '50mb'}));
@@ -26,7 +26,7 @@ app.use((req,res,next)=>{
   // fs.readdirSync('public/img').forEach(file => {
   //   fs.unlinkSync(`public/img/${file}`);
   // });
- 
+   console.log(fs.existsSync('public/img/realstate-6221006221000-1.jpeg'))
     next();
 })
 

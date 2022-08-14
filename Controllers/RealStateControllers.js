@@ -33,7 +33,7 @@ const { find } = require('../ModelsControllers/RealStateModels');
 exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
         // console.log(req.body.ListImagesDeleted.length === 0 )
         if(req.body.ListImagesDeleted.length !== 0 ){ 
-        console.log("ListImagesDeleted")
+        
         const paramm= req.params.id;
 
         const realstate= await RealState.findById(paramm);
@@ -70,7 +70,7 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
     // console.log(req.body.Image[0],)
     // if(req.body.Image[0].endsWith(".jpeg")) {delete req.body.Image; console.log("delete")}
     if(req.body.Image && !req.body.Image[0].endsWith(".jpeg")){
-        console.log("vali mansouri")
+       
         const images= req.body.Image;
             
         req.body.Image = [];
@@ -104,7 +104,7 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
 })
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
-    console.log('ugytf','jfiuhsdui', req.body.Image, req.body.RealStateNumber)
+    // console.log('ugytf','jfiuhsdui', req.body.Image, req.body.RealStateNumber)
    
     if(req.user.role === 'dealer' ){
         req.body.NoneId= 1234
@@ -173,7 +173,7 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
 
         const city= await City.find();
        
-        console.log('vali', Areas.length)
+        // console.log('vali', Areas.length)
         if(city.length === 0){
             await Promise.all(
             Citys.map(async(mp)=>{
@@ -194,7 +194,7 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
     const city= await Area.find({CityId: id});
     const ae = await Area.find();
     if(ae.length === 0){
-        console.log("create")
+        
         let CId = {};
         await Promise.all(
             Citys.map(async(mp,i)=>{
@@ -203,7 +203,7 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
                 // console.log(await City.findById(CId[`${mp.id}`]))
                })
         )
-        console.log(CId)
+        
         await Promise.all(
          
             Areas.map(async(mp,i)=>{

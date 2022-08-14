@@ -14,7 +14,7 @@ const SmsHandller=(randombyte, PhoneNumber)=>{
         receptor: PhoneNumber
     },
         function(response, status) {
-            console.log(response, randombyte);
+            // console.log(response, randombyte);
             // console.log(status)
     });
 

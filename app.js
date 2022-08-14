@@ -26,7 +26,7 @@ app.use((req,res,next)=>{
   // fs.readdirSync('public/img').forEach(file => {
   //   fs.unlinkSync(`public/img/${file}`);
   // });
-   console.log(fs.existsSync('public/img/realstate-6221006221000-1.jpeg'))
+  //  console.log(fs.existsSync('public/img/realstate-6221006221000-1.jpeg'))
     next();
 })
 

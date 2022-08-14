@@ -151,7 +151,7 @@ exports.ReciveSMS=CatchAsync(async (req, res,next)=>{
             let code;
             if(user){
             //  throw('error cant find your phonenumber')
-                console.log('sdfds')
+               
             code= await user.CreateRandomPass();
             user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
             user.SineupCode = code;
@@ -183,7 +183,7 @@ exports.ReciveSMS=CatchAsync(async (req, res,next)=>{
 exports.SendSmSPass=CatchAsync(async (req, res, next)=>{
 
             const {smspass}= req.body;
-            console.log(smspass)
+            // console.log(smspass)
             let user;
             let ResetPasswords = false;
             if(!smspass) throw('error notget smspass');

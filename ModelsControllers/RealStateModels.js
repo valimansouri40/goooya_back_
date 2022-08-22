@@ -94,12 +94,11 @@ Labi: {
 },
 Lease: {
     
-    type:Number,
-    min:[3,'error length str']
+    type:Number
 
 },
 Location:{
-    required:[true,'error loc'],
+    // required:[true,'error loc'],
     type: Object
 },
 Masahat: {
@@ -222,6 +221,87 @@ EsquierName: {
 EsquierPhoneNumber: {
             type: Number,
             required: [true, 'real state not exist esquier ph']
+},
+
+RepresenativePhoneNumber: {
+    type: Number
+            
+},
+RepresenativeName: {
+    type: String
+            
+},
+PricePerMeter: {
+    type: Number
+            
+},
+TheWay:{
+    type: String
+},
+
+TheWell: {
+    default:false,
+    type:Boolean
+},
+DbWindow: {
+    default:false,
+    type:Boolean
+},
+Phone: {
+    default:false,
+    type:Boolean
+},
+License: {
+    default:false,
+    type:Boolean
+},
+Gas: {
+    default:false,
+    type:Boolean
+},
+Wastewater: {
+    default:false,
+    type:Boolean
+},
+endOfWork: {
+    default:false,
+    type:Boolean
+},
+Janitor: {
+    default:false,
+    type:Boolean
+},
+HowManyFloors: {
+    // default:false,
+    type:String
+},
+HowManyUnits: {
+    // default:false,
+    type:String
+},
+MonthlyCharge: {
+    // default:false,
+    type:Number
+},
+TrasMeasure: {
+    // default:false,
+    type:Number
+},
+DocumentType:  {
+    // default:false,
+    type:String
+},
+GoooyaExplain:{
+    // default:false,
+    type:String
+},
+Exchange: {
+    type: Boolean,
+    default: false
+},
+AgreedPrice:{
+    type: Boolean,
+    default: false
 },
 Mark:{
     type: Boolean,

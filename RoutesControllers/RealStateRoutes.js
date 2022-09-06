@@ -3,14 +3,15 @@ const State= require('../Controllers/RealStateControllers');
 const Auth= require('../Controllers/AuthControllers');
 const router = express.Router();
 
-    router.route('/').get( State.GetAllRealState)
+router.route('/').get( State.GetAllRealState)
 
 
     router.route('/')
     .post(Auth.Protected, Auth.ResterictTo('admin','dealer','employee','advisor'),
-     State.CreateRealStateNumber,
-        State.ImageHandller ,State.PostRealState);
-
+    State.CreateRealStateNumber,
+    State.ImageHandller ,State.PostRealState);
+    
+    router.route('/getmyrealstate').get(Auth.Protected,Auth.ResterictTo('admin','dealer','employee','advisor', "user"),State.unShowRealState,State.GetMyRealState);
 
 
     router.route('/:id').get(State.GetOneState);
@@ -22,7 +23,6 @@ const router = express.Router();
     .post(State.GetAllCity);
 
     router.use(Auth.Protected);
-
 
 
     router.route('/writearea')
@@ -41,7 +41,7 @@ const router = express.Router();
     router.route('/deletecity')
     .post(State.FilterCity);
 
-    router.use(Auth.ResterictTo('admin','employee'));
+    router.use(Auth.ResterictTo('admin','dealer','employee','advisor'));
 
 
 

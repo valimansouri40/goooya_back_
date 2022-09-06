@@ -309,14 +309,25 @@ Mark:{
 },
 AreaObjId:{
     type:mongoose.Schema.ObjectId,
-        ref:'Area',
+    ref:'Area',
 },
 NoneId:{
     type: Number
 },
+show: {
+
+},
+Show:{
+    type: String,
+    default:'ok',
+    
+},
 createAt:{
     type:Date,
     default: Date.now()
+},
+UpdateAt:{
+    type: Number
 }
 });
 
@@ -342,7 +353,12 @@ RealStateSchema.pre('findOne',async function(next){
        
         next();
 })
+// RealStateSchema.pre(/^(updateOne|save|findOneAndUpdate)/,async function(next){
+//     // console.log(this.UpdateAt,'saduiashuy')
+//         this.UpdateAt = Date.now();
 
+//         next()
+// })
  const RealState= mongoose.model('RealState', RealStateSchema);
 
  module.exports= RealState;

@@ -20,7 +20,8 @@ exports.GetOneData= Model => CatchAsync(async (req, res, next)=>{
     const param= req.params.id;
     
     const model= await Model.findById(param);
-        
+        // const reg = new RegExp( 'ok','i')
+        // console.log(await Model.find({Show:{"$ne": 'ok' }}))
         // let arrimg=[]
         //         model.Image.map(im=>{
         //             // realstate-1648546291143-1.jpeg
@@ -30,11 +31,23 @@ exports.GetOneData= Model => CatchAsync(async (req, res, next)=>{
         //         })
         // console.log(model)
         // model.Image= arrimg;
+        // console.log(typeof req.query )
+        
+        if(req.query.myrealstate !== 'undefined' && req.query.myrealstate !== '' && req.query.myrealstate !== model.RegistrarId._id.valueOf() ){
+            res.status(201).json({
+                status:'success',
+                message: 'این ملک توسط شما ثبت نشده است'
+                // data: model
+            })
+            
+        }else{
+            res.status(201).json({
+                status:'success',
+                data: model
+            })
+        }
 
-    res.status(201).json({
-        status:'success',
-        data: model
-    })
+    
 });
 
 exports.LikeRealState = (req, Model)=>{
@@ -118,9 +131,9 @@ exports.UpdateData= Model => CatchAsync(async (req, res)=>{
    
     req.body.NoneId= null
     
-    console.log(req.body.Image)
+    // console.log(req.body.Image)
     const model= await Model.findByIdAndUpdate(param, req.body);
-    console.log(model.Image)
+    // console.log(model.Image)
     res.status(200).json({
         status:'success',
         data: model

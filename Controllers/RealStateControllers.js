@@ -12,6 +12,9 @@ const Rate = require('../ModelsControllers/RateModels');
 const { Citys } = require('../City&Area/city');
 const { Areas } = require('../City&Area/Areas');
 const { find } = require('../ModelsControllers/RealStateModels');
+const { UniqueRandomNumber } = require('../Utils/utils');
+const ApiFeacher = require('../Utils/ApiFeacher');
+
 
 // const multerStorage = multer.memoryStorage();
 
@@ -29,16 +32,22 @@ const { find } = require('../ModelsControllers/RealStateModels');
 // exports.uploadTourImages = upload.fields([
 //   { name: 'Image', maxCount: 5 }
 // ]);
+exports.unShowRealState = CatchAsync(async (req, res,next)=>{
+    if(req.user.role === 'user'){
+        req.body.Show = 'not'
+    }
+    next()
+})
 
 exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
-        // console.log(req.body.ListImagesDeleted.length === 0 )
-        if(req.body.ListImagesDeleted.length !== 0 ){ 
+        // console.log(req.body.ListImagesDeleted.length  )
+        if(req.body.ListImagesDeleted && req.body.ListImagesDeleted.length !== 0 && req.body.ListImagesDeleted[0].startsWith(`${req.body.RealStateNumber}`)){ 
         
-        const paramm= req.params.id;
+        // const paramm= req.params.id;
 
-        const realstate= await RealState.findById(paramm);
+        // const realstate= await RealState.findById(paramm);
             
-        realstate.Image.forEach(path => fs.existsSync(`public/img/${path}`) 
+        req.body.ListImagesDeleted.forEach(path => fs.existsSync(`public/img/${path}`) 
         && fs.unlinkSync(`public/img/${path}`));
         next();
         }else{
@@ -49,7 +58,7 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
 const IdHandller = (lastId)=>{
     const pers = 1 / lastId;
     const bettween = (pers + 1) * lastId;
-    return bettween;
+    return Math.round(bettween);
 }
 exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
     // console.log(req.body.Image)
@@ -69,22 +78,28 @@ exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
 exports.ImageHandller=CatchAsync(async (req,res,next)=>{
     // console.log(req.body.Image[0],)
     // if(req.body.Image[0].endsWith(".jpeg")) {delete req.body.Image; console.log("delete")}
-    if(req.body.Image && !req.body.Image[0].endsWith(".jpeg")){
+    if(req.body.Image ){
        
         const images= req.body.Image;
             
         req.body.Image = [];
         
-    //   console.log(req.body.RealStateNumber);
   await Promise.all(
     images.map(async (file, i) => {
-      const filename = `realstate-${req.body.RealStateNumber}-${i + 1}.jpeg`;
+      let filename = file;
         // console.log(file)
+    if(!file.endsWith('.jpeg') && !file.startsWith(`${req.body.RealStateNumber}`  )){
+        const randomNumber = UniqueRandomNumber(req.body.Image);
+        // console.log(randomNumber)
+        filename = `${req.body.RealStateNumber}/realstate-${req.body.RealStateNumber}-${randomNumber}.jpeg`;
+
         const fl= file.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
-           
+
+        !fs.existsSync(`public/img/${req.body.RealStateNumber}`) && fs.mkdirSync(`public/img/${req.body.RealStateNumber}`);
+
       await sharp(imgBuffer).jpeg({ quality: 50 })
-      .resize(1920, 1000)
+      .resize(1400, 1000)
       .toFile(`public/img/${filename}`)
       .then(data => {
           console.log('normal: ')
@@ -95,16 +110,14 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
           console.log(`downisze issue ${err}`)
         throw('can not image save')
     })
-
+        }
       req.body.Image.push(filename);
     }))
         }
-        
     next();
 })
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
-    // console.log('ugytf','jfiuhsdui', req.body.Image, req.body.RealStateNumber)
    
     if(req.user.role === 'dealer' ){
         req.body.NoneId= 1234
@@ -113,6 +126,10 @@ exports.PostRealState= CatchAsync(async (req, res, next)=>{
 
     }
     await RealState.create(req.body);
+
+    // if(req.user.role === 'user'){
+            
+    // }
         res.status(200).json({
             status:'success',
         })
@@ -135,7 +152,17 @@ exports.DeleteOneRealState= CatchAsync(async (req, res)=>{
 });
 
 
-
+exports.GetMyRealState = CatchAsync( async (req, res, next)=>{
+            // console.log(req.user)
+            const LimitData =  new ApiFeacher(RealState.find({RegistrarId: req.user._id}), req.query).paginate();
+            const data = await LimitData.data;
+            const lengthData = (await RealState.find({RegistrarId: req.user._id})).length
+            res.status(200).json({
+                status: 'succes',
+                data: data,
+                length: lengthData
+            })
+})
 
 
 exports.WriteCity=CatchAsync(async (req,res,next)=>{
@@ -173,7 +200,7 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
 
         const city= await City.find();
        
-        // console.log('vali', Areas.length)
+        
         if(city.length === 0){
             await Promise.all(
             Citys.map(async(mp)=>{
@@ -200,7 +227,7 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
             Citys.map(async(mp,i)=>{
                 const obj = await City.findOne({Id: mp.CityId, name: mp.name});
                 CId[`${mp.id}`] = obj._id
-                // console.log(await City.findById(CId[`${mp.id}`]))
+                
                })
         )
         
@@ -211,7 +238,8 @@ exports.GetAllArea=CatchAsync( async( req, res)=>{
                      
                     let AreaId = `${100 + i}` + mp.CityId ;
                      await Area.create({Id: AreaId,objid: CId[`${mp.CityId}`], ...mp });
-                    console.log(AreaId, Number(AreaId), CId[`${mp.CityId}`]);}
+                    
+                }
                     
                     )
                     );

@@ -22,7 +22,7 @@ Balcony: {
 City: {
     required:[true,'error str'],
     type:String,
-    min:[3,'error length str']
+    min:[2,'error length str']
 
 },
 ConferaenceHall: {
@@ -216,11 +216,11 @@ RealStateNumber:{
 },
 EsquierName: {
     type: String,
-    required: [true, 'real state not exist esquier name']
+    // required: [true, 'real state not exist esquier name']
 },
 EsquierPhoneNumber: {
             type: Number,
-            required: [true, 'real state not exist esquier ph']
+            // required: [true, 'real state not exist esquier ph']
 },
 
 RepresenativePhoneNumber: {
@@ -314,20 +314,18 @@ AreaObjId:{
 NoneId:{
     type: Number
 },
-show: {
-
-},
 Show:{
     type: String,
     default:'ok',
-    
+    enum:['ok','not', 'unseen', 'pending'],
+    require: [true, 'not enterd Show']
 },
 createAt:{
     type:Date,
     default: Date.now()
 },
 UpdateAt:{
-    type: Number
+    type: Date
 }
 });
 
@@ -350,7 +348,10 @@ RealStateSchema.pre('findOne',async function(next){
             path:'RegistrarId',
             select: 'FristName LastName  PhoneNumber _id role '
         });
-       
+        this.populate({
+            path: "AreaObjId",
+            select: "areatype areaName _id landUse latitude longtitude ReginonalPrice humanTissue areaNature"
+        })
         next();
 })
 // RealStateSchema.pre(/^(updateOne|save|findOneAndUpdate)/,async function(next){

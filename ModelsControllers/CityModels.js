@@ -1,7 +1,14 @@
 const { default: mongoose } = require("mongoose");
 
 const CitySchema= mongoose.Schema({
-
+    FinglishName:  {
+        required:[true,'error str'],
+        type:String,
+    },
+    Description:  {
+        required:[true,'error str'],
+        type:String,
+    },
     bakhsh:  {
         required:[true,'error str'],
         type:String,

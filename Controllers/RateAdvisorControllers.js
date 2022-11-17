@@ -13,10 +13,19 @@ exports.RateAdvisorPostRate = CatchAsync(async (req, res)=>{
 
 
 exports.GetBestOfAdvisor =CatchAsync(async(req, res)=>{
-
-        let bestOf = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}],RateAdvisor:{$gt: 2}})
-        .sort('-RateAdvisor').limit(4);
-
+        let bestOf; 
+        if(req.query.limit === 'false'){
+          // bestOf = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}]})
+          // .sort('-RateAdvisor').limit(4)
+          bestOf = await User.find({role: 'advisor'})
+          .sort('-RateAdvisor').limit(4)
+        }else{
+          bestOf = await User.find({role: 'advisor'})
+          .sort('-RateAdvisor')
+        }
+       
+        // RateAdvisor:{$gt: 2}
+      
         res.status(200).json({
           status: "success",
           data: bestOf

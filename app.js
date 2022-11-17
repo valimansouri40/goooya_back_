@@ -15,18 +15,23 @@ const Reviwe= require('./RoutesControllers/Reviwe&rateRoutes');
 const Appointment= require('./RoutesControllers/AppointmentRoutes');
 const Mark = require('./RoutesControllers/MarkRoutes');
 const RateAd = require('./RoutesControllers/RateAdvisor');
- const fs = require('fs');
+const AdminNotification = require('./RoutesControllers/adminNotifRoutes');
+//  const fs = require('fs');
+// const RealStateModel = require('./ModelsControllers/RealStateModels');
 
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true,limit: '50mb'}));
-app.use((req,res,next)=>{
+app.use(async(req,res,next)=>{
   
   console.log('middleware')
   // fs.readdirSync('public/img').forEach(file => {
   //   fs.unlinkSync(`public/img/${file}`);
   // });
   //  console.log(fs.existsSync('public/img/realstate-6221006221000-1.jpeg'))
+  // await RealStateModel.updateMany({Tab:'rahn'},{"$set":{Show:'ok'}});
+  // await RealStateModel.updateMany({Tab:'sells'},{"$set":{Show:'ok'}});
+  
     next();
 })
 
@@ -38,6 +43,7 @@ app.use(cors({
 }))
 
 app.use(express.static('public/img'))
+app.use(express.static('public'))
 app.use(helmet());
 
 
@@ -66,6 +72,7 @@ app.use('/api/v1/reviwe', Reviwe);
 app.use('/api/v1/appointment', Appointment);
 app.use('/api/v1/Mark', Mark);
 app.use('/api/v1/RateAdvisor', RateAd);
+app.use('/api/v1/admin', AdminNotification)
 
 
 module.exports= app;

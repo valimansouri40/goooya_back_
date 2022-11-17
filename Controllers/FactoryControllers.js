@@ -110,15 +110,16 @@ exports.CompressImageProfile = CatchAsync(async (req, res, next)=>{
 
         if(!req.body.Image) next();
         // const filename = `realstate-${req.user._id}-${ 1000001}.jpeg`;
-        
+        // console.log(req.user)
         const fl= req.body.Image.split(';base64,').pop();
         let imgBuffer = Buffer.from(fl, 'base64');
-           
+        const fileName =`${String(req.user.PhoneNumber) + req.user.FristName}.jpeg` 
+        // console.log(fileName) 
        await sharp(imgBuffer).jpeg({ quality: 30 })
-      .resize(700, 500).toBuffer()
+      .resize(700, 500).toFile(`public/profile/${fileName}`)
       .then(data => {
-        req.body.Image = 'data:image/jpeg;base64,' + Buffer.from(data).toString('base64')
-          
+        // req.body.Image = 'data:image/jpeg;base64,' + Buffer.from(data).toString('base64')
+          req.body.Image = fileName
       })
       .catch(err => console.log(`downisze issue ${err}`))
     

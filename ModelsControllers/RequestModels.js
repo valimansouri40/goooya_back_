@@ -45,7 +45,7 @@ const RequestSchema=mongoose.Schema({
     Status:{
         type:String,
         default: 'unseen',
-        enum:['unseen', 'Pending','Accepted']
+        enum:['unseen', 'Pending','Accepted','decline']
     },
     createAt:{
         type:Date,

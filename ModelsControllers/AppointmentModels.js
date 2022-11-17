@@ -31,9 +31,9 @@ const AppointmentSchema = new mongoose.Schema({
       required: [true, 'Review can not be empty!']
     },
     Accept:{
-        type: String,
-        default: 'not',
-        enum:['ok', 'not']
+        type:String,
+        default: 'unseen',
+        enum:['unseen', 'Pending','Accepted','decline']
       },
     createAt:{
         type: Date,

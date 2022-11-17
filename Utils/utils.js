@@ -10,7 +10,7 @@ exports.UniqueRandomNumber = (arr)=>{
             }
     })
     
-    while(unique && unique.length > 0 && unique[0] === RandomNumber){
+    if(unique && unique.length > 0 && unique[0] === RandomNumber){
         this.UniqueRandomNumber(arr)
     }
     

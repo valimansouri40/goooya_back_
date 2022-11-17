@@ -73,11 +73,23 @@ const AreaSchema=new mongoose.Schema({
     type:String,
     max:[25, 'error length']
 },
+FinglishName:  {
+    required:[true,'error str'],
+    type:String,
+},
    landUse:{
     // required:[true,'error area'],
     type:String,
     max:[25, 'error length']
+},
+Description:  {
+    required:[true,'error str'],
+    type:String,
+},
+sortLevel:{
+    type: Number
 }
+
 })
 
 AreaSchema.pre(/^find/, function(next) {

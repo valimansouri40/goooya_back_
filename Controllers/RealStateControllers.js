@@ -9,9 +9,9 @@ const fs= require('fs');
 const Mark = require('../ModelsControllers/MarkModels');
 const Appointment = require('../ModelsControllers/AppointmentModels');
 const Rate = require('../ModelsControllers/RateModels');
-const { Citys } = require('../City&Area/city');
-const { Areas } = require('../City&Area/Areas');
-const { find } = require('../ModelsControllers/RealStateModels');
+// const { Citys } = require('../City&Area/city');
+// const { Areas } = require('../City&Area/Areas');
+// const { find } = require('../ModelsControllers/RealStateModels');
 const { UniqueRandomNumber } = require('../Utils/utils');
 const ApiFeacher = require('../Utils/ApiFeacher');
 
@@ -34,13 +34,18 @@ const ApiFeacher = require('../Utils/ApiFeacher');
 // ]);
 exports.unShowRealState = CatchAsync(async (req, res,next)=>{
     if(req.user.role === 'user'){
-        req.body.Show = 'not'
+        req.body.Show = 'unseen'
     }
     next()
 })
 
 exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
         // console.log(req.body.ListImagesDeleted.length  )
+        if(req.body.AdvisorId !== 1234 || req.body.AdvisorId !== '1234'){
+            req.body.NoneId = 1;
+        }
+
+        req.body.UpdateAt = Date.now()
         if(req.body.ListImagesDeleted && req.body.ListImagesDeleted.length !== 0 && req.body.ListImagesDeleted[0].startsWith(`${req.body.RealStateNumber}`)){ 
         
         // const paramm= req.params.id;
@@ -99,7 +104,13 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
         !fs.existsSync(`public/img/${req.body.RealStateNumber}`) && fs.mkdirSync(`public/img/${req.body.RealStateNumber}`);
 
       await sharp(imgBuffer).jpeg({ quality: 50 })
-      .resize(1400, 1000)
+      .resize({width:1400, height:1000}).composite([
+          {
+              input: 'public/goooya-logo.png',
+              top: 40,
+              left: 40
+          }
+      ])
       .toFile(`public/img/${filename}`)
       .then(data => {
           console.log('normal: ')
@@ -119,17 +130,19 @@ exports.ImageHandller=CatchAsync(async (req,res,next)=>{
 
 exports.PostRealState= CatchAsync(async (req, res, next)=>{
    
-    if(req.user.role === 'dealer' ){
+    if(['dealer','user'].includes(req.user.role)){
         req.body.NoneId= 1234
+        
+        delete req.body.AdvisorId
     }else{
         delete req.body.NoneId
 
     }
+   
+
+   
     await RealState.create(req.body);
 
-    // if(req.user.role === 'user'){
-            
-    // }
         res.status(200).json({
             status:'success',
         })
@@ -166,48 +179,68 @@ exports.GetMyRealState = CatchAsync( async (req, res, next)=>{
 
 
 exports.WriteCity=CatchAsync(async (req,res,next)=>{
-    
+
+        // console.log(req.body)
+        if(!req.body.City_id){
         const filter= await City.find({...req.body});
         
         if(filter.length  < 1){
          await City.create(req.body);
 
+       }
+        }else{
+            await City.findByIdAndUpdate(req.body.City_id, {...req.body})
+        }
         res.status(200).json({
             status:'success',
-        })}
+        })
         next()
 });
 
 
 exports.WriteArea=CatchAsync( async(req, res, next)=>{
-
     const cityId= req.body.CityId;
     const findcity= await City.findOne({name:cityId});
+    
+    req.body.objid= findcity?._id;
+    req.body.CityId= findcity?.id;
+    // console.log(req.body)
+    
+    if(!req.body.Area_id){
+        const filter= await Area.find({...req.body});
+        if(filter.length  < 1){
+        await Area.create(req.body);
 
-    req.body.objid= findcity._id;
-    req.body.CityId= findcity.id;
-    const filter= await Area.find({...req.body});
-    if(filter.length  < 1){
-     await Area.create(req.body);
-    res.status(200).json({
-        status:'success',
-    })
-    } 
+        res.status(200).json({
+            status:'success',
+        })
+
+        } 
+
+       
+    }else{
+        await Area.findByIdAndUpdate(req.body.Area_id,{...req.body});
+
+        res.status(200).json({
+            status:'success',
+        })
+    }
     next();
 })
 
+
 exports.GetAllCity=CatchAsync( async( req, res)=>{
 
-        const city= await City.find();
+        const city= await City.find().select('-Description');
        
         
-        if(city.length === 0){
-            await Promise.all(
-            Citys.map(async(mp)=>{
-                await City.create({...mp});
-            }))
+        // if(city.length === 0){
+        //     await Promise.all(
+        //     Citys.map(async(mp)=>{
+        //         await City.create({...mp});
+        //     }))
          
-        }
+        // }
        
         res.status(200).json({
             status: 'success',
@@ -218,32 +251,32 @@ exports.GetAllCity=CatchAsync( async( req, res)=>{
 exports.GetAllArea=CatchAsync( async( req, res)=>{
         const id= req.query.id;
         
-    const city= await Area.find({CityId: id});
-    const ae = await Area.find();
-    if(ae.length === 0){
+    const city= await Area.find({CityId: id}).sort('-sortLevel').select('-Description');
+    // const ae = await Area.find();
+    // if(ae.length === 0){
         
-        let CId = {};
-        await Promise.all(
-            Citys.map(async(mp,i)=>{
-                const obj = await City.findOne({Id: mp.CityId, name: mp.name});
-                CId[`${mp.id}`] = obj._id
+    //     let CId = {};
+    //     await Promise.all(
+    //         Citys.map(async(mp,i)=>{
+    //             const obj = await City.findOne({Id: mp.CityId, name: mp.name});
+    //             CId[`${mp.id}`] = obj._id
                 
-               })
-        )
+    //            })
+    //     )
         
-        await Promise.all(
+    //     await Promise.all(
          
-            Areas.map(async(mp,i)=>{
-                //    if(mp.CityId !== 621){ 
+    //         Areas.map(async(mp,i)=>{
+    //             //    if(mp.CityId !== 621){ 
                      
-                    let AreaId = `${100 + i}` + mp.CityId ;
-                     await Area.create({Id: AreaId,objid: CId[`${mp.CityId}`], ...mp });
+    //                 let AreaId = `${100 + i}` + mp.CityId ;
+    //                  await Area.create({Id: AreaId,objid: CId[`${mp.CityId}`], ...mp });
                     
-                }
+    //             }
                     
-                    )
-                    );
-                }
+    //                 )
+    //                 );
+    //             }
                 //  await City.deleteMany();
                 //  await Area.deleteMany();
                 // await Area.deleteMany();
@@ -276,6 +309,21 @@ exports.FindCity=CatchAsync(async(req, res)=>{
 
 exports.FilterCity=CatchAsync(async(req, res)=>{
     const id= req.query.id;
+
+    const findCityName = await City.findById(id);
+
+    const realstateLength = await RealState.find({City: findCityName.name}).skip(1).limit(10);
+
+    if(realstateLength.length > 0){
+        if(realstateLength.length > 0){
+            res.status(200).json({
+                message:'در این شهر ملک ثبت شده است!!'
+                
+            })
+            return;
+        }
+    }
+
     await City.findByIdAndDelete(id);
     res.status(200).json({
         status: 'success',
@@ -302,7 +350,16 @@ exports.FindArea=CatchAsync(async(req, res)=>{
 
 exports.FilterArea=CatchAsync(async(req, res)=>{
     const id= req.query.id;
-    
+    const realstateLength = await RealState.find({AreaObjId: id}).skip(1).limit(10);
+
+    if(realstateLength.length > 0){
+        res.status(200).json({
+            message:'در این منطقه ملک ثبت شده است!!'
+            
+        })
+        return;
+    }
+
     await Area.findByIdAndDelete(id);
     res.status(200).json({
         status: 'success',

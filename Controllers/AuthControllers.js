@@ -1,7 +1,8 @@
 const User = require("../ModelsControllers/UserModels");
 const jwt= require('jsonwebtoken');
 const { CatchAsync } = require("../Utils/CatchAsync");
-const SmsHandller = require("../Utils/SMS");
+const { SmsHandller} = require("../Utils/SMS");
+const {sendPublicitySMS} = require("../Utils/publicCitySMS")
 const crypto = require('crypto');
 const { promisify } = require("util");
 const { UpdateData } = require("./FactoryControllers");
@@ -292,15 +293,17 @@ exports.ResetPassword=CatchAsync(async (req,res,next)=>{
 })
 
 exports.GetMeData=CatchAsync( async (req, res)=>{
-            
       
         //    if(req.user.Image && req.user.Image.endsWith("jpeg")){
         //    req.user.Image = fs.readFileSync(`public/img/${req.user.Image}`, "base64");
         // }
-        res.status(200).json({
-            status:'success',
-            data: req.user
-        })
+    
+             
+            res.status(200).json({
+                status:'success',
+                data: req.user
+            })
+        
 
 })
 
@@ -325,6 +328,16 @@ exports.ChangePassword=CatchAsync(async (req, res,next)=>{
             })
 })
 
+const arrReq={'mapdesign':'طراحی نقشه',
+        'Mapping':'نقشه برداری',
+        'Registrationwork':'کار های ثبتی',
+        'Advocacy':'بازسازی',
+        'Executionandconstruction':' اجرا و ساخت',
+        'ExpertofJustice':'عدم خلافی',
+        'endofwork':' پایان کار',
+        'lisense':'جواز',
+        }
+const arrCop ={'Buy land': 'خرید زمین با قابلیت رشد', 'cooperation':"مشارکت در ساخت"}
 exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
             
             const {PhoneNumber,FristName}= req.body;
@@ -332,7 +345,7 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
             if(!PhoneNumber, !FristName) throw ('error phn');
          
             let user
-            if(id !== ''){
+            if( id !== ''){
                 user = await User.findById(id)
             }else{
 
@@ -341,12 +354,19 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                 
                    
             if(!user){
-                req.body.Password ='12345678';
+                req.body.Password =req.body.PhoneNumber;
                 
                  user= await User.create(req.body);
                  if(!user) throw('error')
                  req.body.Objid = user._id;
-                 const rd= await Request.create(req.body)
+                  await Request.create(req.body).then((res)=>{
+                      const message = ` نوع درخواست ${res.TypeWork? arrReq[res.TypeWork]: arrCop[res.Type]}  
+                        ${res.Text? "متن درخواست : " + res.Text:'' } 
+                        نام درخواست کننده : ${user.FristName + user.LastName?user.LastName:''} 
+                        شماره درخواست کننده : ${user.PhoneNumber}
+                        `
+                        sendPublicitySMS(message)
+                  })
                  const code= await user.CreateRandomPass();
                  user.ResetePasswordExpires= Date.now( ) + 3 * 60 * 1000;
                  user.SineupCode = code;
@@ -365,7 +385,14 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
                
             }else{
                 req.body.Objid = user._id;
-                  await Request.create(req.body);
+                  await Request.create(req.body).then((res)=>{
+                    const message = ` نوع درخواست ${res.TypeWork? arrReq[res.TypeWork]: arrCop[res.Type]}  
+                      ${res.Text? "متن درخواست : " + res.Text:'' } 
+                      نام درخواست کننده : ${user.FristName + user.LastName?user.LastName:''} 
+                      شماره درخواست کننده : ${user.PhoneNumber}
+                      `
+                      sendPublicitySMS(message)
+                })
             //    token= CreateToken(user._id)
             if(id === ''){
             const code= await user.CreateRandomPass();
@@ -385,16 +412,24 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
 
   exports.UpdateDataWithField=  CatchAsync(async (req, res)=>{
     const param= req.params.id;
-    //  console.log(req.body.City, 4357436)
+    //  console.log(req.body.CitysAndAreas, 4357436)
 
     let usercityarr= [];
         req.body.CitysAndAreas.map(mp=>{
-            usercityarr.push(mp.Id)
+            usercityarr.push(mp.objid)
         })
         // unique Object arr
         // req.body.City = usercityarr.filter((elem, index, self) =>{ self.findIndex(
         //         (t) => {return (t.name === elem.name); }) === index});
-            // console.log(req.body.City)
+         let uniqueCity =[];
+         req.body.City =[];
+          usercityarr.map(el=>{
+            if(!uniqueCity.includes(el.name)){
+                uniqueCity.push(el.name)
+                 req.body.City.push(el);
+            }
+        })
+        // console.log(req.body.City, usercityarr)
     const model= await User.findByIdAndUpdate(param, req.body);
             // console.log(model)
     res.status(200).json({
@@ -417,8 +452,9 @@ exports.GetOneUser= CatchAsync(async(req, res)=>{
 exports.GetAdvisor=CatchAsync(async (req, res, next)=>{
 
             const advisor = await User.find({$or:[{role: 'employee'}, {role: 'advisor'}]});
+            // const advisor = await User.find({role: 'advisor'});
             //   console.log(advisor);
-
+            
             let advisorarr = []
              advisor.map(mp=>
               //  &&  mp.CitysAndAreas.name === req.query.CityId

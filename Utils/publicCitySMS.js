@@ -5,20 +5,20 @@ const kavenegar = require('kavenegar').KavenegarApi({
 
 exports.sendPublicitySMS= (message)=>{
     
-    kavenegar.Send({
-         message:message,
-        sender: "1000596446",
-        receptor: "09105375122"
-    }
-    ,
-        function(response, status) {
-            console.log(response, message);
-            console.log(status)
-            // if(status !== 200){
-            //     SmsSend(randombyte, PhoneNumber)
-            // }
-    }
-    )
+    // kavenegar.Send({
+    //      message:message,
+    //     sender: "1000596446",
+    //     receptor: "09105375122"
+    // }
+    // ,
+    //     function(response, status) {
+    //         console.log(response, message);
+    //         console.log(status)
+    //         // if(status !== 200){
+    //         //     SmsSend(randombyte, PhoneNumber)
+    //         // }
+    // }
+    // )
    
 
 }

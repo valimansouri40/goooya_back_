@@ -4,8 +4,7 @@ const RealStateSchema= mongoose.Schema({
  Aggrement: {
             default:false,
             type:Boolean
-    },
- 
+},
 Area: {
     required:[true,'error str'],
         type:String,
@@ -278,6 +277,25 @@ HowManyFloors: {
 HowManyUnits: {
     // default:false,
     type:String
+},
+PropertyFloor: {
+    // default:false,
+    type:String
+},
+NumberOfUnits: {
+    // default:false,
+    type:String
+},
+HowManyFloors: {
+    // default:false,
+    type:String
+},
+SoundInsoulation: {
+    // default:false,
+    type:Boolean
+},
+Water:{
+    type:Boolean
 },
 MonthlyCharge: {
     // default:false,

@@ -412,19 +412,20 @@ exports.RequestJobHandller=CatchAsync(async (req, res, next)=>{
 
   exports.UpdateDataWithField=  CatchAsync(async (req, res)=>{
     const param= req.params.id;
-    //  console.log(req.body.CitysAndAreas, 4357436)
+    //  console.log(req.body)
 
     let usercityarr= [];
         req.body.CitysAndAreas.map(mp=>{
             usercityarr.push(mp.objid)
         })
+        // console.log(usercityarr)
         // unique Object arr
         // req.body.City = usercityarr.filter((elem, index, self) =>{ self.findIndex(
         //         (t) => {return (t.name === elem.name); }) === index});
          let uniqueCity =[];
          req.body.City =[];
           usercityarr.map(el=>{
-            if(!uniqueCity.includes(el.name)){
+            if(el && !uniqueCity.includes(el.name)){
                 uniqueCity.push(el.name)
                  req.body.City.push(el);
             }

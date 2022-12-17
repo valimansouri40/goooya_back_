@@ -139,9 +139,12 @@ exports.PostRealState= CatchAsync(async (req, res, next)=>{
 
     }
    
-
-   
-    await RealState.create(req.body);
+    // delete req.body.Area;
+    const gh= await RealState.create(req.body).catch(er=>{
+        req.body.Image.map(el=>fs.existsSync('public/img/'+el)&&fs.unlinkSync('public/img/'+el))
+        throw('انجام نشد')
+    });
+    console.log(gh)
 
         res.status(200).json({
             status:'success',

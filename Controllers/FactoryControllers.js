@@ -1,6 +1,6 @@
 const { CatchAsync } = require("../Utils/CatchAsync");
 const ApiFeacher= require('../Utils/ApiFeacher');
-const fs= require('fs');
+// const fs= require('fs');
 const SearchQuery = require("../ModelsControllers/SearchQueryModels");
 const Mark = require("../ModelsControllers/MarkModels");
 const sharp = require("sharp");
@@ -132,7 +132,7 @@ exports.UpdateData= Model => CatchAsync(async (req, res)=>{
    
     req.body.NoneId= null
     
-    // console.log(req.body.Image)
+    // console.log(req.body)
     const model= await Model.findByIdAndUpdate(param, req.body);
     // console.log(model.Image)
     res.status(200).json({

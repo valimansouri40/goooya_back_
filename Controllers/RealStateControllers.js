@@ -63,7 +63,7 @@ exports.DeleteImageExtra=CatchAsync(async (req, res,next)=>{
 const IdHandller = (lastId)=>{
     const pers = 1 / lastId;
     const bettween = (pers + 1) * lastId;
-    return Math.round(bettween);
+    return Math.round(bettween)  ;
 }
 exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
     // console.log(req.body.Image)
@@ -71,19 +71,25 @@ exports.CreateRealStateNumber=CatchAsync(async(req, res , next)=>{
     
     if(fn.length > 0){
     req.body.RealStateNumber = IdHandller(fn[0].RealStateNumber);
+     if(fn[0].RealStateNumber === req.body.RealStateNumber){
+        //  console.log('annn');
+        req.body.RealStateNumber = IdHandller(fn[0].RealStateNumber) + 1;
+
+     }
  
     }else{
     req.body.RealStateNumber = req.body.cityandareaid;
     
 }
+
     // console.log(await RealState.find({RealStateNumber:req.body.RealStateNumber}))
    next();
 });
 
 exports.ImageHandller=CatchAsync(async (req,res,next)=>{
-    // console.log(req.body.Image[0],)
     // if(req.body.Image[0].endsWith(".jpeg")) {delete req.body.Image; console.log("delete")}
     if(req.body.Image ){
+    console.log(req.body.RealStateNumber)
        
         const images= req.body.Image;
             
@@ -141,10 +147,10 @@ exports.PostRealState= CatchAsync(async (req, res, next)=>{
    
     // delete req.body.Area;
     const gh= await RealState.create(req.body).catch(er=>{
-        req.body.Image.map(el=>fs.existsSync('public/img/'+el)&&fs.unlinkSync('public/img/'+el))
+        req.body.Image.map(el=>fs.existsSync('public/img/'+el)&&fs.unlinkSync('public/img/'+el));
         throw('انجام نشد')
     });
-    console.log(gh)
+    // console.log(gh)
 
         res.status(200).json({
             status:'success',

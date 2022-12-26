@@ -332,6 +332,9 @@ AreaObjId:{
 NoneId:{
     type: Number
 },
+OfstorageMeasure:{
+    type: Number
+},
 Show:{
     type: String,
     default:'ok',
